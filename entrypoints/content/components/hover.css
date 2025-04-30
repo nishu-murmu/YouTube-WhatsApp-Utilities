@@ -1,0 +1,17 @@
+.hover-icon-container {
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  padding: 8px;
+  display: none;
+  z-index: 10; */
+  height: 100%;
+  width: 100%;
+  background-color: rgb(241, 119, 119);
+  opacity: 0.7;
+  z-index: 99999;
+  position: relative;
+}
