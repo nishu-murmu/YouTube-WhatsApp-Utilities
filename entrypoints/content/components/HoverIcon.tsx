@@ -5,48 +5,46 @@ import "./hover.css";
 const HoverElement: React.FC = () => {
   useEffect(() => {
     const addHoverIcons = () => {
-      const thumbnails = document.querySelectorAll("ytd-rich-item-renderer");
+      const thumbnails = document.querySelectorAll(
+        "ytd-rich-item-renderer #thumbnail"
+      );
       thumbnails.forEach((thumbnail, index) => {
         if (thumbnail.getAttribute("element-injected") === "true") return;
         const hoverContainer = document.createElement("div");
         hoverContainer.className = "hover-icon-container";
-        hoverContainer.innerHTML = `
-        <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    position: absolute;
-  top="50%";
-  left="50%";
-  transform="translate(-50%, -50%)";
-  background-color="rgba(0, 0, 0, 0.7)";
-  border-radius="50%";
-  padding="8px";
-  z-index="10";
-  >
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-        `;
         hoverContainer.id = `${index}_nishu`;
-        thumbnail.appendChild(hoverContainer);
+        hoverContainer.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        `;
+        thumbnail.prepend(hoverContainer);
         thumbnail.setAttribute("element-injected", "true");
       });
     };
 
-    const observer = new MutationObserver((mutations, observer) => {
+    // Initial run
+    addHoverIcons();
+
+    // Observe DOM changes for new thumbnails
+    const observer = new MutationObserver(() => {
       addHoverIcons();
     });
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      attributes: true,
     });
+
+    // Cleanup on unmount
+    return () => {
+      observer.disconnect();
+      document
+        .querySelectorAll(".hover-icon-container")
+        .forEach((container) => container.remove());
+      document
+        .querySelectorAll("ytd-rich-item-renderer")
+        .forEach((thumbnail) => {
+          thumbnail.removeAttribute("element-injected");
+        });
+    };
   }, []);
 
   return null;

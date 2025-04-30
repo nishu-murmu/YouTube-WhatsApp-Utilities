@@ -1,17 +1,22 @@
 .hover-icon-container {
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
-  padding: 8px;
-  display: none;
-  z-index: 10; */
+  position: absolute;
   height: 100%;
   width: 100%;
-  background-color: rgb(241, 119, 119);
-  opacity: 0.7;
+  background: transparent;
+}
+.hover-icon-container #hover-icon {
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.hover-icon-container:hover {
   z-index: 99999;
-  position: relative;
+}
+
+.hover-icon-container:hover #hover-icon {
+  cursor: pointer;
+  opacity: 1;
 }
