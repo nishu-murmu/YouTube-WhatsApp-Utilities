@@ -1,7 +1,7 @@
 // entrypoints/example-ui.content/index.tsx
 import ReactDOM from "react-dom/client";
-import HoverElement from "./components/HoverIcon";
-import "@/entrypoints/content/components/hover.css";
+import HoverElement from "./components/HoverIcon/HoverIcon";
+import "./components/HoverIcon/hover.css";
 
 export default defineContentScript({
   matches: ["<all_urls>"],

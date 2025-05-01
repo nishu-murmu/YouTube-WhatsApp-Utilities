@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import "./hover.css";
+import "@/entrypoints/content/components/HoverIcon/hover.css";
 
 // Hover Element Component
 const HoverElement: React.FC = () => {
+  function getYoutubeVideoId(url: string) {
+    return new URL(url).searchParams.get("v");
+  }
   useEffect(() => {
     const addHoverIcons = () => {
       const thumbnails = document.querySelectorAll(
@@ -18,6 +21,10 @@ const HoverElement: React.FC = () => {
         `;
         thumbnail.prepend(hoverContainer);
         thumbnail.setAttribute("element-injected", "true");
+        const videoId = getYoutubeVideoId(
+          thumbnail.querySelector("a")?.href || ""
+        );
+        console.log(videoId);
       });
     };
 
