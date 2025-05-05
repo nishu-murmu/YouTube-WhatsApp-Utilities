@@ -20,14 +20,14 @@ export default defineContentScript({
     });
     ui.mount();
 
-    const dashboardUi = await createShadowRootUiWrapper({
-      ctx,
-      name: "dashboard",
-      position: "inline",
-      anchor: "body",
-      component: <Dashboard />,
-    });
-    dashboardUi.mount();
+    // const dashboardUi = await createShadowRootUiWrapper({
+    //   ctx,
+    //   name: "dashboard-component",
+    //   position: "inline",
+    //   anchor: "body",
+    //   component: <Dashboard />,
+    // });
+    // dashboardUi.mount();
 
     const addVideoUi = await createShadowRootUiWrapper({
       ctx,

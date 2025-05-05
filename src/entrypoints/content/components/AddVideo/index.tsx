@@ -1,4 +1,5 @@
 import { Button } from "@@/components/ui/button";
+import { DateTimePicker } from "@@/components/ui/Datepicker";
 import {
   Dialog,
   DialogContent,
@@ -8,54 +9,87 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@@/components/ui/dialog";
-import { Input } from "@@/components/ui/input";
 import { Label } from "@@/components/ui/label";
+import { useEffect, useState } from "react";
 
 export function AddVideo() {
   const [currentVideoData, setCurrentVideoData] = useState<{
     videoId: string;
-  }>({} as any);
+  } | null>(null);
+  const [date12, setDate12] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
-    self.addEventListener("message", (event) => {
+    const handleMessage = (event: MessageEvent) => {
       const { data } = event;
-      console.log({ data });
-      setCurrentVideoData(data);
-    });
+      if (data?.videoId) {
+        setCurrentVideoData(data);
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
   }, []);
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     document.querySelector("#schedule-video")?.click();
+  //   }, 4000);
+  // }, []);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Schedule this video</DialogTitle>
-          <DialogDescription>Add this video to your schedule</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <iframe
-              width="420"
-              height="315"
-              src={`https://www.youtube.com/embed/${currentVideoData?.videoId}?controls=0`}
-            ></iframe>
+    <>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button id="schedule-video" className="hidden" variant="outline">
+            Schedule Video
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          className="sm:max-w-[425px] w-full p-0"
+          // Disable default animations
+          style={{
+            animation: "none",
+            transform: "none",
+            opacity: 1,
+          }}
+        >
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Schedule This Video</DialogTitle>
+            <DialogDescription>
+              Add this video to your schedule.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 px-6 py-4">
+            <div className="space-y-2">
+              <div className="rounded overflow-hidden shadow-sm border">
+                <iframe
+                  width={"100%"}
+                  height="180"
+                  src={`https://www.youtube.com/embed/9zmEDzsMkqE`}
+                ></iframe>
+              </div>
+              {/* {currentVideoData?.videoId ? (
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                No video loaded.
+              </div>
+            )} */}
+            </div>
+            <DateTimePicker
+              hourCycle={12}
+              value={date12}
+              onChange={setDate12}
+            />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+
+          <DialogFooter className="px-6 pb-6">
+            <Button type="submit">Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

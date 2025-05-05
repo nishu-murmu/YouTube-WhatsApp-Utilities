@@ -1,7 +1,11 @@
-import { Button, buttonVariants } from "./button";
-import { Input } from "./input";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { cn } from "../../src/lib/utils";
+import { Button, buttonVariants } from "@@/components/ui/button";
+import { Input } from "@@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { add, format } from "date-fns";
 import { type Locale, enUS } from "date-fns/locale";
 import {
@@ -337,7 +341,7 @@ function Calendar({
           ) : (
             <ChevronRight className="h-4 w-4" />
           ),
-        MonthCaption: ({ calendarMonth }: any) => {
+        MonthCaption: ({ calendarMonth }) => {
           return (
             <div className="inline-flex gap-2">
               <Select

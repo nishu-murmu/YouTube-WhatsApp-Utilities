@@ -24,14 +24,30 @@ const HoverElement: React.FC = () => {
 `;
         thumbnail.prepend(hoverContainer);
         thumbnail.setAttribute("element-injected", "true");
-        const videoId = getYoutubeVideoId(
-          thumbnail.querySelector("a")?.href || ""
+        const videoId = thumbnail.querySelector("a")?.href
+          ? getYoutubeVideoId(thumbnail.querySelector("a")?.href || "")
+          : "";
+
+        const videoTitle = getYoutubeVideoId(
+          thumbnail.querySelector("h3")?.textContent || ""
         );
-        self.postMessage({
-          type: "ADD_VIDEO",
-          data: {
-            videoId,
-          },
+        const sendMessageListener = () => {
+          self.postMessage({
+            type: "ADD_VIDEO",
+            data: {
+              videoId,
+              videoTitle,
+            },
+          });
+        };
+        thumbnail
+          .querySelector("#hover-icon")
+          ?.addEventListener("click", sendMessageListener);
+
+        thumbnail.addEventListener("mouseover", () => {
+          console.log("mouseover", thumbnail);
+          //@ts-ignore
+          thumbnail.querySelector(".hover-icon-container").style.opacity = "1";
         });
       });
     };

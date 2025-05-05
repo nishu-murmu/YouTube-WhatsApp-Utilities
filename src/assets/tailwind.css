@@ -121,3 +121,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* dialog.css */
+.radix-dialog-overlay {
+  animation: none !important;
+}
+
+.radix-dialog-content {
+  animation: none !important;
+  transform: none !important;
+}

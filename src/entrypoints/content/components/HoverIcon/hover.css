@@ -12,7 +12,6 @@ ytd-rich-item-renderer #thumbnail:hover .hover-icon-container {
 }
 
 .hover-icon-container #hover-icon {
-  opacity: 1;
   transition: opacity 0.2s ease-in-out;
   padding: 5px;
   border-radius: 50%;
