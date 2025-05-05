@@ -1,4 +1,4 @@
-import { cn } from "@/src/lib/utils";
+import { cn } from "../../src/lib/utils";
 import * as React from "react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {

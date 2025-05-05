@@ -9,30 +9,30 @@ const HoverElement: React.FC = () => {
   }
   useEffect(() => {
     const addHoverIcons = () => {
-      const thumbnails = document.querySelectorAll(
-        "ytd-rich-item-renderer #thumbnail"
-      );
+      const thumbnails = document.querySelectorAll("ytd-rich-item-renderer");
       thumbnails.forEach((thumbnail, index) => {
         if (thumbnail.getAttribute("element-injected") === "true") return;
         const hoverContainer = document.createElement("div");
         hoverContainer.className = "hover-icon-container";
         hoverContainer.id = `${index}_nishu`;
         hoverContainer.innerHTML = `
-  <div class="hover-overlay">
-  
-  <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
-    <circle cx="12" cy="12" r="10"/>
-    <path d="M8 12h8"/>
-    <path d="M12 8v8"/>
-  </svg>
-  </div>
+        <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12h8"/>
+          <path d="M12 8v8"/>
+        </svg>
 `;
         thumbnail.prepend(hoverContainer);
         thumbnail.setAttribute("element-injected", "true");
         const videoId = getYoutubeVideoId(
           thumbnail.querySelector("a")?.href || ""
         );
-        console.log(videoId);
+        self.postMessage({
+          type: "ADD_VIDEO",
+          data: {
+            videoId,
+          },
+        });
       });
     };
 
