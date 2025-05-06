@@ -13,7 +13,7 @@ export default defineConfig({
     disabled: true,
   },
   manifest: {
-    permissions: ["activeTab"],
+    permissions: ["activeTab", "tabs", "storage", "alarms", "notifications"],
     host_permissions: ["https://www.youtube.com/*"],
   },
 });

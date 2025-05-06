@@ -1,11 +1,8 @@
-import { AddVideo } from '../content/components/AddVideo';
-import Dashboard from '../content/components/Dashboard';
-import './App.css';
+import { AddVideo } from "../content/components/AddVideo";
+import "./App.css";
 
 function App() {
-  return (
-    <AddVideo/>
-  );
+  return <AddVideo />;
 }
 
 export default App;

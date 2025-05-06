@@ -1,10 +1,7 @@
-import ReactDOM from "react-dom/client";
+import "~/assets/tailwind.css";
+import { AddVideo } from "./components/AddVideo";
 import HoverElement from "./components/HoverIcon/HoverIcon";
 import "./components/HoverIcon/hover.css";
-import "~/assets/tailwind.css";
-import Dashboard from "./components/Dashboard";
-import { createShadowRootUiWrapper } from "@/utils";
-import { AddVideo } from "./components/AddVideo";
 
 export default defineContentScript({
   matches: ["<all_urls>"],
@@ -31,7 +28,7 @@ export default defineContentScript({
 
     const addVideoUi = await createShadowRootUiWrapper({
       ctx,
-      name: "add-video",
+      name: "add-video-component",
       position: "inline",
       anchor: "body",
       component: <AddVideo />,
