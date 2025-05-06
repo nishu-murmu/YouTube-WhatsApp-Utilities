@@ -86,11 +86,17 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
     }
   }, [month, year, date]);
 
-  // // Update parent component when values change
+  // Update parent component when values change - but only when our internal values actually change
   useEffect(() => {
     if (onChange) {
-      const newDate = new Date(year, month - 1, date, hour, minute);
-      onChange(newDate);
+      // Create new date object from current values
+      const newDateObj = new Date(year, month - 1, date, hour, minute);
+
+      // Only call onChange if the date is actually different
+      // This prevents infinite loops by not triggering when the parent updates selectedDate
+      if (!selectedDate || newDateObj.getTime() !== selectedDate.getTime()) {
+        onChange(newDateObj);
+      }
     }
   }, [date, month, year, hour, minute]);
 
@@ -105,13 +111,49 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
     // Calculate position index
     const currentIndex = values.indexOf(current);
 
+    // Set up wheel event handling with a non-passive listener
+    useEffect(() => {
+      const element = ref.current;
+      if (!element) return;
+
+      const handleWheelEvent = (e: any) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        // Start scrolling animation
+        setIsScrolling((prev: any) => ({ ...prev, [type]: true }));
+
+        // Direction of scroll (up or down)
+        const direction = e.deltaY > 0 ? 1 : -1;
+        const index = values.indexOf(current);
+        let newIndex = (index + direction) % values.length;
+
+        // Handle negative index
+        if (newIndex < 0) newIndex = values.length - 1;
+
+        // Update state
+        setter(values[newIndex]);
+
+        // Stop scrolling animation after delay
+        setTimeout(() => {
+          setIsScrolling((prev: any) => ({ ...prev, [type]: false }));
+        }, 50);
+      };
+
+      // Add wheel event listener with passive: false option
+      element.addEventListener("wheel", handleWheelEvent, { passive: false });
+
+      // Clean up
+      return () => {
+        element.removeEventListener("wheel", handleWheelEvent);
+      };
+    }, [ref, values, current, type]);
+
     return (
       <div
         className="relative h-24 overflow-hidden rounded-lg bg-gray-100 shadow-inner"
         ref={ref}
-        onWheel={(e) => {
-          handleWheel(e, setter, values, current, type);
-        }}
+        // Note: we don't use onWheel prop here since we're using addEventListener instead
       >
         {/* Fixed selection indicator - positioned in center */}
         <div className="absolute top-1/2 left-0 right-0 h-8 -mt-4 pointer-events-none z-10">
@@ -176,20 +218,20 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
           <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
             Date
           </h3>
-          <div className="grid grid-cols-3 gap-2">
-            <div>
+          <div className="flex gap-2">
+            <div className="w-[27.5%]">
               <p className="text-xs font-medium text-gray-500 mb-1 text-center">
                 Day
               </p>
               {renderWheel(days, date, setDate, "date", dateRef)}
             </div>
-            <div>
+            <div className="w-[27.5%]">
               <p className="text-xs font-medium text-gray-500 mb-1 text-center">
                 Month
               </p>
               {renderWheel(months, month, setMonth, "month", monthRef)}
             </div>
-            <div>
+            <div className="w-[45%]">
               <p className="text-xs font-medium text-gray-500 mb-1 text-center">
                 Year
               </p>
@@ -203,7 +245,7 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
           <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
             Time
           </h3>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <div>
               <p className="text-xs font-medium text-gray-500 mb-1 text-center">
                 Hour
@@ -235,6 +277,7 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
   );
 };
 
+// Updated AddVideo component with Neomorphic Date Picker
 export function AddVideo() {
   const [currentVideoData, setCurrentVideoData] = useState({
     videoId: "",
@@ -257,7 +300,6 @@ export function AddVideo() {
   }, []);
 
   const handleSubmit = async () => {
-    console.log({ currentVideoData, date12 });
     if (!date12 || !currentVideoData?.videoId) return;
     sendRuntimeMessage({
       action: "SCHEDULE_VIDEO",
@@ -283,7 +325,7 @@ export function AddVideo() {
       {isOpen && (
         <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 font-roboto">
           <div
-            className="w-full max-w-5xl rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900"
+            className="w-full max-w-5xl max-h-[370px] h-full rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4">
@@ -296,7 +338,7 @@ export function AddVideo() {
             </div>
 
             <div className="space-x-4 flex items-center justify-between">
-              <div>
+              {/* <div>
                 <div className="overflow-hidden rounded-md shadow-sm">
                   <iframe
                     width="100%"
@@ -311,7 +353,7 @@ export function AddVideo() {
                     {currentVideoData?.videoTitle}
                   </h3>
                 </div>
-              </div>
+              </div> */}
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Select Date & Time
