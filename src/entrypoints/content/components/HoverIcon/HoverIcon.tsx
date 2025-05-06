@@ -3,15 +3,23 @@ import "@/entrypoints/content/components/HoverIcon/hover.css";
 
 // Hover Element Component
 const HoverElement: React.FC = () => {
+  function isValidURL(str: string) {
+    try {
+      new URL(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
   function getYoutubeVideoId(url: string) {
-    if (!url) return "";
+    if (!isValidURL(url)) return "";
     return new URL(url).searchParams.get("v");
   }
   useEffect(() => {
     const addHoverIcons = () => {
-      const thumbnails = document.querySelectorAll("ytd-rich-item-renderer");
-      thumbnails.forEach((thumbnail, index) => {
-        if (thumbnail.getAttribute("element-injected") === "true") return;
+      const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
+      youtubeVideos.forEach((element, index) => {
+        if (element.getAttribute("element-injected") === "true") return;
         const hoverContainer = document.createElement("div");
         hoverContainer.className = "hover-icon-container";
         hoverContainer.id = `${index}_nishu`;
@@ -22,14 +30,14 @@ const HoverElement: React.FC = () => {
           <path d="M12 8v8"/>
         </svg>
 `;
-        thumbnail.prepend(hoverContainer);
-        thumbnail.setAttribute("element-injected", "true");
-        const videoId = thumbnail.querySelector("a")?.href
-          ? getYoutubeVideoId(thumbnail.querySelector("a")?.href || "")
+        element.prepend(hoverContainer);
+        element.setAttribute("element-injected", "true");
+        const videoId = element.querySelector("a")?.href
+          ? getYoutubeVideoId(element.querySelector("a")?.href || "")
           : "";
 
         const videoTitle = getYoutubeVideoId(
-          thumbnail.querySelector("h3")?.textContent || ""
+          element.querySelector("h3")?.textContent || ""
         );
         const sendMessageListener = () => {
           self.postMessage({
@@ -40,14 +48,55 @@ const HoverElement: React.FC = () => {
             },
           });
         };
-        thumbnail
+
+        const thumbnail = element.querySelector("#content img") as any
+        const contentElem = element.querySelector("#content") as any
+
+        element
           .querySelector("#hover-icon")
           ?.addEventListener("click", sendMessageListener);
 
-        thumbnail.addEventListener("mouseover", () => {
-          console.log("mouseover", thumbnail);
+        element.addEventListener("mouseenter", () => {
           //@ts-ignore
-          thumbnail.querySelector(".hover-icon-container").style.opacity = "1";
+          element.querySelector(".hover-icon-container").style.opacity = "1";
+        })
+
+
+        element.addEventListener("mouseout", (e: any) => {
+          const videoElem = e?.relatedTarget
+          videoElem.addEventListener("mouseenter", () => {
+            if (element) {
+              // Step 2: Set up a MutationObserver
+              const observer = new MutationObserver((mutationsList: any) => {
+                for (const mutation of mutationsList) {
+                  console.log(mutation, 'check')
+                  if (mutation.type === 'childList') {
+                    // Check removed nodes
+                    for (const node of mutation.removedNodes) {
+                      if (node.nodeType === Node.ELEMENT_NODE && node?.classList?.contains(e?.relatedTarget)) {
+                        console.log('video-preview-overlay was removed from DOM!');
+                        // Do something here...
+                      }
+                    }
+                  }
+                }
+              });
+
+              // Step 3: Start observing the parent for child removals
+              observer.observe(element, {
+                childList: true, // watch for direct children being added/removed
+                subtree: false   // don't go deeper than direct children
+              });
+            } else {
+              console.log("Parent element not found");
+            }
+
+            // if (!element.contains(videoElem) || (element.contains(videoElem) && videoElem.className.contains("hover-icon-container"))) {
+            //   //@ts-ignore
+            //   element.querySelector(".hover-icon-container").style.opacity = "1";
+            // }
+          })
+
         });
       });
     };
