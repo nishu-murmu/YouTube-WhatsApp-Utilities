@@ -1,21 +1,23 @@
 var currentScheduleInfo: any = null;
 browser.alarms.onAlarm.addListener((alarm) => {
   browser.storage.local.get("schedules").then(({ schedules }) => {
-    const currentSchedule = schedules.find(
-      (s: { name: string; time: Date }) => s.name === alarm.name
-    );
+    const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
+    if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
-    if (Date.now() > new Date(JSON.parse(currentSchedule.time)).getTime()) {
-      browser.notifications.create("notification-id-" + currentSchedule.id, {
-        type: "basic",
-        isClickable: true,
-        title: "Reminder",
-        message: `Scheduled Video: ${currentSchedule.name}`,
-        iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
-      });
-      return;
+    const scheduledTime = new Date(currentSchedule.time).getTime();
+    const currentTime = Date.now();
+    const timeDifference = Math.abs(currentTime - scheduledTime) / (1000 * 60);
+    const threshold = 2;
+    if (timeDifference <= threshold) {
+      openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
     }
-    openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
+    browser.notifications.create("notification-id-" + currentSchedule.id, {
+      type: "basic",
+      isClickable: true,
+      title: "Reminder",
+      message: `Scheduled Video: ${currentSchedule.name}`,
+      iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
+    });
   });
 });
 

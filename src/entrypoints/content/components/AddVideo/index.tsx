@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Neomorphic Date Time Picker Component
-const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
+export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
   // Get the real current date/time for minimum date restriction
   const currentDateTime = new Date();
 
@@ -159,7 +158,7 @@ const NeomorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
         onChange(newDateObj);
       }
     }
-  }, [date, month, year, hour, minute, onChange, selectedDate]);
+  }, [date, month, year, hour, minute]);
 
   // Render a slot wheel for each value type
   const renderWheel = (
@@ -405,12 +404,6 @@ export function AddVideo() {
       },
     });
     setIsOpen(false);
-  };
-
-  // Helper function for sending runtime messages
-  const sendRuntimeMessage = (message: any) => {
-    // This is a placeholder - the original implementation would be used here
-    console.log("Sending runtime message:", message);
   };
 
   return (

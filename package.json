@@ -1,8 +1,8 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "youtube video scheduler",
+  "description": "A chrome extension to schedule videos on youtube, incase you want to watch something later",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
