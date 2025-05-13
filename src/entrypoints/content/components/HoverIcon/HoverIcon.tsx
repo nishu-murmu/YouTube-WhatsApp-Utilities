@@ -50,29 +50,55 @@ const HoverElement: React.FC = () => {
         element
           .querySelector("#hover-icon")
           ?.addEventListener("click", hoverIconClickHandler);
-
-        element.addEventListener("mouseenter", () => {
-          //@ts-ignore
-          element.querySelector(".hover-icon-container").style.opacity = "1";
-        });
       });
     };
-
-    // Initial run
     addHoverIcons();
+    var goneOutside = false;
+    const observer = new MutationObserver((list: any) => {
+      const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
+      console.log("🚀 ~ observer ~ list[0].target:", list[0].target);
+      if (list[0].target?.href) {
+        youtubeVideos.forEach((element: any) => {
+          if (element.querySelector("a")?.href === list[0].target?.href) {
+            goneOutside = true;
+            element.querySelector(".hover-icon-container").style.opacity = "1";
+            return;
+          }
+          goneOutside = false;
+          element.querySelector(".hover-icon-container").style.opacity = "0";
+        });
+      }
+    });
+    observer.observe(document.querySelector(`#media-container-link`) as Node, {
+      attributes: true,
+    });
 
-    // Observe DOM changes for new thumbnails
-    const observer = new MutationObserver(() => {
+    //@ts-ignore
+    // document
+    //   .querySelector(`ytd-video-preview`)
+    //   .addEventListener(`mouseover`, () => {
+    //     console.log("🚀 ~ .addEventListener ~ goneOutside:", goneOutside);
+    //     if (goneOutside === true) {
+    //       document
+    //         .querySelectorAll("ytd-rich-item-renderer")
+    //         .forEach((element: any) => {
+    //           element.querySelector(".hover-icon-container").style.opacity =
+    //             "0";
+    //         });
+    //     }
+    //   });
+
+    const listObserver = new MutationObserver((list) => {
       addHoverIcons();
     });
-    observer.observe(document.body, {
+    listObserver.observe(document.querySelector(`#contents`) as Node, {
       childList: true,
-      subtree: true,
     });
 
     // Cleanup on unmount
     return () => {
       observer.disconnect();
+      listObserver.disconnect();
       document
         .querySelectorAll(".hover-icon-container")
         .forEach((container) => container.remove());
