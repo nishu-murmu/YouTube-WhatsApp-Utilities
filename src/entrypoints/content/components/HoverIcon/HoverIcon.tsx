@@ -69,9 +69,27 @@ const HoverElement: React.FC = () => {
         });
       }
     });
-    observer.observe(document.querySelector(`#media-container-link`) as Node, {
-      attributes: true,
-    });
+
+    if (document.querySelector(`#video-preview`)) {
+      const newObserver = new MutationObserver((list: any) => {
+        if (
+          //@ts-ignore
+          document
+            .querySelector(`#video-preview`)
+            .contains(document.querySelector(`#media-container-link`))
+        )
+          return;
+
+        observer.observe(document.querySelector(`#media-container-link`)!, {
+          attributes: true,
+        });
+      });
+      newObserver.observe(document.querySelector(`#video-preview`)!, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    }
 
     //@ts-ignore
     // document
@@ -87,6 +105,10 @@ const HoverElement: React.FC = () => {
     //         });
     //     }
     //   });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      addHoverIcons();
+    });
 
     const listObserver = new MutationObserver((list) => {
       addHoverIcons();
