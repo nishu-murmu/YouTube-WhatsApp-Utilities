@@ -52,11 +52,9 @@ const HoverElement: React.FC = () => {
           ?.addEventListener("click", hoverIconClickHandler);
       });
     };
-    addHoverIcons();
     var goneOutside = false;
     const observer = new MutationObserver((list: any) => {
       const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
-      console.log("🚀 ~ observer ~ list[0].target:", list[0].target);
       if (list[0].target?.href) {
         youtubeVideos.forEach((element: any) => {
           if (element.querySelector("a")?.href === list[0].target?.href) {
@@ -69,17 +67,9 @@ const HoverElement: React.FC = () => {
         });
       }
     });
-
-    if (document.querySelector(`#video-preview`)) {
+    setTimeout(() => {
+      addHoverIcons();
       const newObserver = new MutationObserver((list: any) => {
-        if (
-          //@ts-ignore
-          document
-            .querySelector(`#video-preview`)
-            .contains(document.querySelector(`#media-container-link`))
-        )
-          return;
-
         observer.observe(document.querySelector(`#media-container-link`)!, {
           attributes: true,
         });
@@ -89,33 +79,16 @@ const HoverElement: React.FC = () => {
         childList: true,
         subtree: true,
       });
-    }
-
-    //@ts-ignore
-    // document
-    //   .querySelector(`ytd-video-preview`)
-    //   .addEventListener(`mouseover`, () => {
-    //     console.log("🚀 ~ .addEventListener ~ goneOutside:", goneOutside);
-    //     if (goneOutside === true) {
-    //       document
-    //         .querySelectorAll("ytd-rich-item-renderer")
-    //         .forEach((element: any) => {
-    //           element.querySelector(".hover-icon-container").style.opacity =
-    //             "0";
-    //         });
-    //     }
-    //   });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      addHoverIcons();
-    });
+    }, 3000);
 
     const listObserver = new MutationObserver((list) => {
       addHoverIcons();
     });
-    listObserver.observe(document.querySelector(`#contents`) as Node, {
-      childList: true,
-    });
+    setTimeout(() => {
+      listObserver.observe(document.querySelector(`#contents`)!, {
+        childList: true,
+      });
+    }, 5000);
 
     // Cleanup on unmount
     return () => {

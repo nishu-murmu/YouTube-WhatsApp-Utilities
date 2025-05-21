@@ -4,13 +4,7 @@ browser.alarms.onAlarm.addListener((alarm) => {
     const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
     if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
-    const scheduledTime = new Date(currentSchedule.time).getTime();
-    const currentTime = Date.now();
-    const timeDifference = Math.abs(currentTime - scheduledTime) / (1000 * 60);
-    const threshold = 2;
-    if (timeDifference <= threshold) {
-      openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
-    }
+    openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
     browser.notifications.create("notification-id-" + currentSchedule.id, {
       type: "basic",
       isClickable: true,

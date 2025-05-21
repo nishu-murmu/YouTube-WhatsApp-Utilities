@@ -1,11 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
   // Get the real current date/time for minimum date restriction
   const currentDateTime = new Date();
 
+  // Helper function to ensure we have a valid Date object
+  const parseDate = (dateInput) => {
+    if (!dateInput) return new Date();
+
+    // If it's already a Date object, return it
+    if (dateInput instanceof Date) return dateInput;
+
+    // If it's a string, try to parse it
+    if (typeof dateInput === "string") {
+      const parsed = new Date(dateInput);
+      // Check if the parsed date is valid
+      return isNaN(parsed.getTime()) ? new Date() : parsed;
+    }
+
+    // Fallback to current date
+    return new Date();
+  };
+
   // Initialize with provided date or current date, ensuring it's not in the past
-  const initialDate = selectedDate || new Date();
+  const initialDate = parseDate(selectedDate);
   // If the initialDate is in the past, use currentDateTime
   if (initialDate.getTime() < currentDateTime.getTime()) {
     initialDate.setTime(currentDateTime.getTime());
@@ -19,7 +37,7 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
   const [minute, setMinute] = useState(initialDate.getMinutes());
 
   // Animation states
-  const [isScrolling, setIsScrolling] = useState<any>({
+  const [isScrolling, setIsScrolling] = useState({
     date: false,
     month: false,
     year: false,
@@ -34,8 +52,25 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
   const hourRef = useRef(null);
   const minuteRef = useRef(null);
 
+  // Update internal state when selectedDate prop changes
+  useEffect(() => {
+    if (selectedDate) {
+      const parsedDate = parseDate(selectedDate);
+      // Only update if the parsed date is different from current internal state
+      const currentInternalDate = new Date(year, month - 1, date, hour, minute);
+
+      if (parsedDate.getTime() !== currentInternalDate.getTime()) {
+        setDate(parsedDate.getDate());
+        setMonth(parsedDate.getMonth() + 1);
+        setYear(parsedDate.getFullYear());
+        setHour(parsedDate.getHours());
+        setMinute(parsedDate.getMinutes());
+      }
+    }
+  }, [selectedDate]);
+
   // Get days in current month
-  const getDaysInMonth = (month: any, year: any) => {
+  const getDaysInMonth = (month, year) => {
     return new Date(year, month, 0).getDate();
   };
 
@@ -154,26 +189,24 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
 
       // Only call onChange if the date is actually different
       // This prevents infinite loops by not triggering when the parent updates selectedDate
-      if (!selectedDate || newDateObj.getTime() !== selectedDate.getTime()) {
+      const currentSelectedDate = parseDate(selectedDate);
+      if (
+        !selectedDate ||
+        newDateObj.getTime() !== currentSelectedDate.getTime()
+      ) {
         onChange(newDateObj);
       }
     }
   }, [date, month, year, hour, minute]);
 
   // Render a slot wheel for each value type
-  const renderWheel = (
-    values: any,
-    current: any,
-    setter: any,
-    type: any,
-    ref: any
-  ) => {
+  const renderWheel = (values, current, setter, type, ref) => {
     // Set up wheel event handling with a non-passive listener
     useEffect(() => {
       const element = ref.current;
       if (!element) return;
 
-      const handleWheelEvent = (e: any) => {
+      const handleWheelEvent = (e) => {
         e.stopPropagation();
         e.preventDefault();
 
@@ -191,7 +224,7 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
         }
 
         // Start scrolling animation
-        setIsScrolling((prev: any) => ({ ...prev, [type]: true }));
+        setIsScrolling((prev) => ({ ...prev, [type]: true }));
 
         // Direction of scroll (up or down)
         const direction = e.deltaY > 0 ? 1 : -1;
@@ -205,7 +238,7 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
 
         // Stop scrolling animation after delay
         setTimeout(() => {
-          setIsScrolling((prev: any) => ({ ...prev, [type]: false }));
+          setIsScrolling((prev) => ({ ...prev, [type]: false }));
         }, 50);
       };
 
@@ -256,7 +289,7 @@ export const NeomorphicDateTimePicker = ({ selectedDate, onChange }) => {
             isScrolling[type] ? "transform translate-y-1" : ""
           }`}
         >
-          {values.map((value: any, index: number) => {
+          {values.map((value, index) => {
             // Calculate relative position (-3 to +3 from current)
             const relativePos =
               (index - currentIndex + values.length) % values.length;
@@ -380,7 +413,7 @@ export function AddVideo() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
+    const handleMessage = (e) => {
       if (e?.data?.type === "ADD_VIDEO") {
         setCurrentVideoData(e?.data?.data);
         setIsOpen(true);
@@ -441,7 +474,7 @@ export function AddVideo() {
             {/* Date picker takes full width */}
             <NeomorphicDateTimePicker
               selectedDate={date12}
-              onChange={(newDate: any) => setDate12(newDate)}
+              onChange={(newDate) => setDate12(newDate)}
             />
 
             {/* Buttons with Neomorphic style for Save button */}
