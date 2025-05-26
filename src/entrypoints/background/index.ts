@@ -15,25 +15,6 @@ browser.alarms.onAlarm.addListener((alarm) => {
   });
 });
 
-browser.commands.onCommand.addListener((command) => {
-  if (command === "toggle-dashboard") {
-    browser.storage.local
-      .get("dashboardVisible")
-      .then(({ dashboardVisible }) => {
-        browser.runtime
-          .sendMessage({
-            action: "TOGGLE_DASHBOARD",
-            data: { dashboardVisible: dashboardVisible ? false : true },
-          })
-          .then((res) => {
-            browser.storage.local.set({
-              dashboardVisible: !dashboardVisible,
-            });
-          });
-      });
-  }
-});
-
 browser.runtime.onStartup.addListener(async () => {
   // checkMissedSchedules().then((missedSchedules) => {
   //   if (missedSchedules.length > 0) {
@@ -61,7 +42,6 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
         id,
         url,
       }).then((res) => {
-        console.log("🚀 ~ browser.runtime.onMessage.addListener ~ res:", res);
         sendResponse(res);
       });
       break;
@@ -82,5 +62,31 @@ browser.notifications.onClicked.addListener((notificationId) => {
 });
 
 export default defineBackground(() => {
-  console.log("Hello background!", { id: browser.runtime.id });
+  browser.commands.onCommand.addListener((command) => {
+    if (command === "toggle-dashboard") {
+      browser.storage.local
+        .get("dashboardVisible")
+        .then(({ dashboardVisible }) => {
+          browser.storage.local
+            .set({
+              dashboardVisible:
+                !dashboardVisible || typeof dashboardVisible === "undefined"
+                  ? true
+                  : false,
+            })
+            .then(() => {
+              browser.tabs
+                .query({ active: true, currentWindow: true })
+                .then((tabs) => {
+                  const activeTab = tabs[0];
+                  if (activeTab) {
+                    browser.tabs.sendMessage(activeTab.id!, {
+                      action: "TOGGLE_DASHBOARD",
+                    });
+                  }
+                });
+            });
+        });
+    }
+  });
 });

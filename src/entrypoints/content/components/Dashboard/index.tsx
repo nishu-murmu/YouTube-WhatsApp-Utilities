@@ -8,11 +8,7 @@ const NeomorphicDashboard = () => {
   const [editingDateId, setEditingDateId] = useState<any>(null);
   const [editingDate, setEditingDate] = useState<any>(null);
   const pageSize = 5;
-
-  // Mock data for the table
   const [scheduledVideos, setScheduledVideos] = useState<any>([]);
-
-  // Pagination logic
   const totalPages = Math.ceil(scheduledVideos.length / pageSize);
   const currentData = scheduledVideos.slice(
     (currentPage - 1) * pageSize,
@@ -24,8 +20,6 @@ const NeomorphicDashboard = () => {
       setCurrentPage(page);
     }
   };
-
-  // Handle date change
   const handleDateChange = (date: Date) => {
     if (editingDateId) {
       setScheduledVideos(
@@ -35,13 +29,8 @@ const NeomorphicDashboard = () => {
             : video
         )
       );
-      setTimeout(() => {
-        console.log({ scheduledVideos });
-      }, 80);
     }
   };
-
-  // Toggle date picker visibility
   const toggleDatePicker = (id: string) => {
     if (editingDateId === id) {
       // Close if already editing this item
@@ -54,8 +43,6 @@ const NeomorphicDashboard = () => {
       setEditingDate(video ? JSON.parse(video.time) : new Date());
     }
   };
-
-  // Close date picker when clicking outside
   const closeDatePicker = () => {
     setEditingDateId(null);
     setEditingDate(null);
@@ -67,7 +54,6 @@ const NeomorphicDashboard = () => {
       setScheduledVideos(schedules || []);
     })();
   }, []);
-
   useEffect(() => {
     (async () => {
       await browser.storage.local.set({ schedules: scheduledVideos });

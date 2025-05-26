@@ -25,7 +25,6 @@ export default defineContentScript({
       anchor: "body",
       component: <NeomorphicDashboard />,
     });
-    dashboardUi.mount();
 
     const addVideoUi = await createShadowRootUiWrapper({
       ctx,

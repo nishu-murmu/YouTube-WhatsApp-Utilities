@@ -18,8 +18,8 @@ export default defineConfig({
     commands: {
       "toggle-dashboard": {
         suggested_key: {
-          default: "Ctrl+Shift+Y",
-          mac: "Command+Shift+Y",
+          default: "Ctrl+Shift+S",
+          mac: "Command+Shift+S",
         },
         description: "Toggle the schedule dashboard",
       },
