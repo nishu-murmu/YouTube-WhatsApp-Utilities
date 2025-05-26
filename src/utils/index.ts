@@ -25,7 +25,6 @@ export const createShadowRootUiWrapper = async ({
       return root;
     },
     onRemove: (root) => {
-      // Unmount the root when the UI is removed
       root?.unmount();
     },
   });
@@ -66,7 +65,6 @@ export async function checkMissedSchedules() {
     );
     await browser.storage.local.set({ schedules: remaining });
   }
-
   return missedSchedules;
 }
 

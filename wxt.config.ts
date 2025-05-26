@@ -15,5 +15,14 @@ export default defineConfig({
   manifest: {
     permissions: ["activeTab", "tabs", "storage", "alarms", "notifications"],
     host_permissions: ["https://www.youtube.com/*"],
+    commands: {
+      "toggle-dashboard": {
+        suggested_key: {
+          default: "Ctrl+Shift+Y",
+          mac: "Command+Shift+Y",
+        },
+        description: "Toggle the schedule dashboard",
+      },
+    },
   },
 });

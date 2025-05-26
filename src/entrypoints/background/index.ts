@@ -15,12 +15,40 @@ browser.alarms.onAlarm.addListener((alarm) => {
   });
 });
 
-browser.runtime.onStartup.addListener(() => {
-  checkMissedSchedules().then((missedSchedules) => {
-    if (missedSchedules.length > 0) {
-      console.log("Missed schedules:", missedSchedules);
+browser.commands.onCommand.addListener((command) => {
+  if (command === "toggle-dashboard") {
+    browser.storage.local
+      .get("dashboardVisible")
+      .then(({ dashboardVisible }) => {
+        browser.runtime
+          .sendMessage({
+            action: "TOGGLE_DASHBOARD",
+            data: { dashboardVisible: dashboardVisible ? false : true },
+          })
+          .then((res) => {
+            browser.storage.local.set({
+              dashboardVisible: !dashboardVisible,
+            });
+          });
+      });
+  }
+});
+
+browser.runtime.onStartup.addListener(async () => {
+  // checkMissedSchedules().then((missedSchedules) => {
+  //   if (missedSchedules.length > 0) {
+  //     console.log("Missed schedules:", missedSchedules);
+  //   }
+  // });
+  const allAlarms = await browser.alarms.getAll();
+  const now = Date.now();
+
+  for (const alarm of allAlarms) {
+    if (alarm.scheduledTime < now) {
+      console.log(alarm, "chekc");
+      // await browser.alarms.clear(alarm.name!);
     }
-  });
+  }
 });
 
 browser.runtime.onMessage.addListener((request, _, sendResponse) => {

@@ -89,8 +89,6 @@ const HoverElement: React.FC = () => {
         childList: true,
       });
     }, 5000);
-
-    // Cleanup on unmount
     return () => {
       observer.disconnect();
       listObserver.disconnect();
