@@ -1,7 +1,7 @@
 .hover-icon-container {
   position: absolute;
-  top: 30%;
-  left: 44%;
+  top: 37%;
+  left: 47%;
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
   z-index: 99999;
