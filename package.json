@@ -15,18 +15,10 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.11",
-    "@radix-ui/react-label": "^2.1.4",
-    "@radix-ui/react-popover": "^1.1.11",
-    "@radix-ui/react-select": "^2.2.2",
-    "@radix-ui/react-slot": "^1.2.0",
     "@tailwindcss/vite": "^4.1.5",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.506.0",
     "react": "^19.1.0",
-    "react-day-picker": "9.6.7",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.5",
