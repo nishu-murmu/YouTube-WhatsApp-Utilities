@@ -1,5 +1,5 @@
 {
-  "name": "youtube video scheduler",
+  "name": "Youtube Video Scheduler",
   "description": "A chrome extension to schedule videos on youtube, incase you want to watch something later",
   "private": true,
   "version": "0.1.0",

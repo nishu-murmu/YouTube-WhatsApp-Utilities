@@ -69,7 +69,7 @@ const HoverElement: React.FC = () => {
     });
     setTimeout(() => {
       addHoverIcons();
-      const newObserver = new MutationObserver((list: any) => {
+      const newObserver = new MutationObserver(() => {
         observer.observe(document.querySelector(`#media-container-link`)!, {
           attributes: true,
         });
@@ -81,7 +81,7 @@ const HoverElement: React.FC = () => {
       });
     }, 3000);
 
-    const listObserver = new MutationObserver((list) => {
+    const listObserver = new MutationObserver(() => {
       addHoverIcons();
     });
     setTimeout(() => {
