@@ -1,30 +1,29 @@
 var currentScheduleInfo: any = null;
 browser.alarms.onAlarm.addListener((alarm) => {
   browser.storage.local.get("schedules").then(({ schedules }) => {
-    const currentSchedule = schedules.find(
-      (s: { name: string; time: Date }) => s.name === alarm.name
-    );
+    const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
+    if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
-    if (Date.now() > new Date(JSON.parse(currentSchedule.time)).getTime()) {
-      browser.notifications.create("notification-id-" + currentSchedule.id, {
-        type: "basic",
-        isClickable: true,
-        title: "Reminder",
-        message: `Scheduled Video: ${currentSchedule.name}`,
-        iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
-      });
-      return;
-    }
     openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
+    browser.notifications.create("notification-id-" + currentSchedule.id, {
+      type: "basic",
+      isClickable: true,
+      title: "Reminder",
+      message: `Scheduled Video: ${currentSchedule.name}`,
+      iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
+    });
   });
 });
 
-browser.runtime.onStartup.addListener(() => {
-  checkMissedSchedules().then((missedSchedules) => {
-    if (missedSchedules.length > 0) {
-      console.log("Missed schedules:", missedSchedules);
+browser.runtime.onStartup.addListener(async () => {
+  const allAlarms = await browser.alarms.getAll();
+  const now = Date.now();
+
+  for (const alarm of allAlarms) {
+    if (alarm.scheduledTime < now) {
+      console.log(alarm, "chekc");
     }
-  });
+  }
 });
 
 browser.runtime.onMessage.addListener((request, _, sendResponse) => {
@@ -37,7 +36,6 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
         id,
         url,
       }).then((res) => {
-        console.log("🚀 ~ browser.runtime.onMessage.addListener ~ res:", res);
         sendResponse(res);
       });
       break;
@@ -58,5 +56,31 @@ browser.notifications.onClicked.addListener((notificationId) => {
 });
 
 export default defineBackground(() => {
-  console.log("Hello background!", { id: browser.runtime.id });
+  browser.commands.onCommand.addListener((command) => {
+    if (command === "toggle-dashboard") {
+      browser.storage.local
+        .get("dashboardVisible")
+        .then(({ dashboardVisible }) => {
+          browser.storage.local
+            .set({
+              dashboardVisible:
+                !dashboardVisible || typeof dashboardVisible === "undefined"
+                  ? true
+                  : false,
+            })
+            .then(() => {
+              browser.tabs
+                .query({ active: true, currentWindow: true })
+                .then((tabs) => {
+                  const activeTab = tabs[0];
+                  if (activeTab) {
+                    browser.tabs.sendMessage(activeTab.id!, {
+                      action: "TOGGLE_DASHBOARD",
+                    });
+                  }
+                });
+            });
+        });
+    }
+  });
 });

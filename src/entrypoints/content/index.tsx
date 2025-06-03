@@ -2,6 +2,7 @@ import "~/assets/tailwind.css";
 import { AddVideo } from "./components/AddVideo";
 import HoverElement from "./components/HoverIcon/HoverIcon";
 import "./components/HoverIcon/hover.css";
+import NeomorphicDashboard from "./components/Dashboard";
 
 export default defineContentScript({
   matches: ["<all_urls>"],
@@ -17,14 +18,13 @@ export default defineContentScript({
     });
     ui.mount();
 
-    // const dashboardUi = await createShadowRootUiWrapper({
-    //   ctx,
-    //   name: "dashboard-component",
-    //   position: "inline",
-    //   anchor: "body",
-    //   component: <Dashboard />,
-    // });
-    // dashboardUi.mount();
+    const dashboardUi = await createShadowRootUiWrapper({
+      ctx,
+      name: "dashboard-component",
+      position: "inline",
+      anchor: "body",
+      component: <NeomorphicDashboard />,
+    });
 
     const addVideoUi = await createShadowRootUiWrapper({
       ctx,
@@ -34,5 +34,18 @@ export default defineContentScript({
       component: <AddVideo />,
     });
     addVideoUi.mount();
+    browser.runtime.onMessage.addListener((request) => {
+      if (request.action === "TOGGLE_DASHBOARD") {
+        browser.storage.local
+          .get("dashboardVisible")
+          .then(({ dashboardVisible }) => {
+            if (dashboardVisible) {
+              dashboardUi.mount();
+            } else {
+              dashboardUi.remove();
+            }
+          });
+      }
+    });
   },
 });
