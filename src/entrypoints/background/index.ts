@@ -16,18 +16,12 @@ browser.alarms.onAlarm.addListener((alarm) => {
 });
 
 browser.runtime.onStartup.addListener(async () => {
-  // checkMissedSchedules().then((missedSchedules) => {
-  //   if (missedSchedules.length > 0) {
-  //     console.log("Missed schedules:", missedSchedules);
-  //   }
-  // });
   const allAlarms = await browser.alarms.getAll();
   const now = Date.now();
 
   for (const alarm of allAlarms) {
     if (alarm.scheduledTime < now) {
       console.log(alarm, "chekc");
-      // await browser.alarms.clear(alarm.name!);
     }
   }
 });

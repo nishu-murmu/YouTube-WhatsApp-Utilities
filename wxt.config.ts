@@ -15,6 +15,13 @@ export default defineConfig({
   manifest: {
     permissions: ["activeTab", "tabs", "storage", "alarms", "notifications"],
     host_permissions: ["https://www.youtube.com/*"],
+    icons: {
+      16: "/icon/icon-16.png",
+      32: "/icon/icon-32.png",
+      48: "/icon/icon-48.png",
+      96: "/icon/icon-96.png",
+      128: "/icon/icon-128.png",
+    },
     commands: {
       "toggle-dashboard": {
         suggested_key: {

@@ -105,3 +105,42 @@ export function openNewTab({ url, name }: { url: string; name: string }) {
     name,
   });
 }
+
+export function timeToSeconds(timeStr: string, playback: number): string {
+  const parts = timeStr.split(":").map(Number);
+  let totalSeconds = 0;
+  if (parts.length === 1) {
+    totalSeconds = parts[0];
+  } else if (parts.length === 2) {
+    totalSeconds = parts[0] * 60 + parts[1];
+  } else if (parts.length === 3) {
+    totalSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+  const adjustedSeconds = totalSeconds / playback;
+  return secondsToTime(adjustedSeconds);
+}
+
+function secondsToTime(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
+  } else {
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  }
+}
+
+export function getSessionStorageItem(key: string) {
+  const value = sessionStorage.getItem(key);
+  try {
+    return value !== null ? JSON.parse(value) : undefined;
+  } catch {
+    return value; // Return raw string if not JSON
+  }
+}

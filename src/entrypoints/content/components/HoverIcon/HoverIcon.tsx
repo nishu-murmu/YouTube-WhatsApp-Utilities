@@ -18,15 +18,18 @@ const HoverElement: React.FC = () => {
       youtubeVideos.forEach((element, index) => {
         if (element.getAttribute("element-injected") === "true") return;
         const hoverContainer = document.createElement("div");
-        hoverContainer.className = "hover-icon-container";
+        hoverContainer.className = "hover-icon-container neomorphic-icon";
         hoverContainer.id = `${index}`;
         hoverContainer.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M8 12h8"/>
-          <path d="M12 8v8"/>
-        </svg>
-`;
+    <div class="neomorphic-icon-bg">
+      <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8 12h8"/>
+        <path d="M12 8v8"/>
+      </svg>
+    </div>
+  `;
+
         element.prepend(hoverContainer);
         element.setAttribute("element-injected", "true");
         const videoId = element.querySelector("a")?.href
@@ -85,9 +88,11 @@ const HoverElement: React.FC = () => {
       addHoverIcons();
     });
     setTimeout(() => {
-      listObserver.observe(document.querySelector(`#contents`)!, {
-        childList: true,
-      });
+      if (document.querySelector(`#contents`)) {
+        listObserver.observe(document.querySelector(`#contents`)!, {
+          childList: true,
+        });
+      }
     }, 5000);
     return () => {
       observer.disconnect();

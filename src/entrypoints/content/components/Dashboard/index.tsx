@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { Edit2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { NeomorphicDateTimePicker } from "../AddVideo";
+import { NeomorphicDateTimePicker } from "../DatePicker";
 
 const NeomorphicDashboard = () => {
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -60,32 +60,21 @@ const NeomorphicDashboard = () => {
     })();
   }, [scheduledVideos]);
 
-
-  useEffect(() => {
-    browser.storage.local.onChanged.addListener((changes) => {
-      console.log(changes)
-      // if (changes.schedules) {
-      //   setScheduledVideos(changes.schedules)
-      // }
-    })
-    return () => {
-
-    }
-  }, []);
-
   return (
     <div className="p-6 bg-transparent min-h-screen flex justify-center fixed top-16 left-[50%] transform -translate-x-1/2 z-[999999]">
       <div className="w-[1020px]">
         <div
           className="bg-gray-200 rounded-3xl p-8 border border-gray-300 mb-8"
           style={{
-            boxShadow: '10px 10px 40px #b8bcc8, -10px -10px 40px #ffffff'
+            boxShadow:
+              "rgb(184, 188, 200) 4px 4px 20px, rgb(255, 255, 255) -4px -4px 20px",
           }}
         >
           <div
             className="bg-gray-200 rounded-2xl p-6 mb-6"
             style={{
-              boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff'
+              boxShadow:
+                "inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff",
             }}
           >
             <h1 className="text-2xl font-bold text-gray-800 text-center">
@@ -96,13 +85,14 @@ const NeomorphicDashboard = () => {
           <div
             className="overflow-hidden rounded-2xl bg-gray-200 p-2 max-h-[450px] overflow-y-scroll"
             style={{
-              boxShadow: 'inset 12px 12px 24px #c1c5c9, inset -12px -12px 24px #ffffff'
+              boxShadow:
+                "inset 12px 12px 24px #c1c5c9, inset -12px -12px 24px #ffffff",
             }}
           >
             <div
               className="grid grid-cols-12 gap-4 p-4 font-semibold text-gray-700 mb-2 bg-gray-200 rounded-xl"
               style={{
-                boxShadow: '6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff'
+                boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
               }}
             >
               <div className="col-span-5">Video</div>
@@ -115,14 +105,16 @@ const NeomorphicDashboard = () => {
                 <div
                   className="bg-gray-200 rounded-3xl p-12 border border-gray-300"
                   style={{
-                    boxShadow: 'inset 16px 16px 32px #c1c5c9, inset -16px -16px 32px #ffffff'
+                    boxShadow:
+                      "inset 16px 16px 32px #c1c5c9, inset -16px -16px 32px #ffffff",
                   }}
                 >
                   <div className="text-center">
                     <div
                       className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center"
                       style={{
-                        boxShadow: '12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff'
+                        boxShadow:
+                          "12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff",
                       }}
                     >
                       <svg
@@ -156,14 +148,15 @@ const NeomorphicDashboard = () => {
                     key={item.id}
                     className="grid grid-cols-12 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02]"
                     style={{
-                      boxShadow: '8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff'
+                      boxShadow: "8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff",
                     }}
                   >
                     <div className="col-span-5">
                       <div
                         className="aspect-[16/9] rounded-2xl overflow-hidden bg-gray-300"
                         style={{
-                          boxShadow: 'inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff'
+                          boxShadow:
+                            "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
                         }}
                       >
                         <iframe
@@ -179,7 +172,8 @@ const NeomorphicDashboard = () => {
                       <div
                         className="bg-gray-200 rounded-xl p-4 w-full"
                         style={{
-                          boxShadow: 'inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff'
+                          boxShadow:
+                            "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff",
                         }}
                       >
                         <span className="text-gray-800 font-medium">
@@ -191,7 +185,8 @@ const NeomorphicDashboard = () => {
                       <div
                         className="flex items-center bg-gray-200 p-4 rounded-2xl transition-all duration-200"
                         style={{
-                          boxShadow: 'inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff'
+                          boxShadow:
+                            "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
                         }}
                       >
                         <div className="text-gray-700 flex-1 text-sm">
@@ -201,14 +196,16 @@ const NeomorphicDashboard = () => {
                         </div>
                         <button
                           onClick={() => toggleDatePicker(item.id)}
-                          className={`ml-3 p-3 rounded-xl transition-all duration-200 ${editingDateId === item.id
-                            ? "bg-blue-200 text-blue-700"
-                            : "bg-gray-200 text-gray-600 hover:scale-105"
-                            }`}
+                          className={`ml-3 p-3 rounded-xl transition-all duration-200 ${
+                            editingDateId === item.id
+                              ? "bg-blue-200 text-blue-700"
+                              : "bg-gray-200 text-gray-600 hover:scale-105"
+                          }`}
                           style={{
-                            boxShadow: editingDateId === item.id
-                              ? 'inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff'
-                              : '6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff'
+                            boxShadow:
+                              editingDateId === item.id
+                                ? "inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff"
+                                : "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
                           }}
                         >
                           <Edit2 size={16} />
@@ -226,20 +223,22 @@ const NeomorphicDashboard = () => {
             <div
               className="bg-gray-200 p-3 rounded-2xl flex items-center space-x-2"
               style={{
-                boxShadow: '12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff'
+                boxShadow: "12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff",
               }}
             >
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${currentPage === 1
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-gray-700"
-                  }`}
+                className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+                  currentPage === 1
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700"
+                }`}
                 style={{
-                  boxShadow: currentPage === 1
-                    ? 'inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff'
-                    : '4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff'
+                  boxShadow:
+                    currentPage === 1
+                      ? "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff"
+                      : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
                 }}
               >
                 &lt;
@@ -249,14 +248,16 @@ const NeomorphicDashboard = () => {
                 <button
                   key={i + 1}
                   onClick={() => handlePageChange(i + 1)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 hover:scale-105 ${currentPage === i + 1
-                    ? "bg-blue-200 text-blue-700 font-semibold"
-                    : "text-gray-700"
-                    }`}
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 hover:scale-105 ${
+                    currentPage === i + 1
+                      ? "bg-blue-200 text-blue-700 font-semibold"
+                      : "text-gray-700"
+                  }`}
                   style={{
-                    boxShadow: currentPage === i + 1
-                      ? 'inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff'
-                      : '6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff'
+                    boxShadow:
+                      currentPage === i + 1
+                        ? "inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff"
+                        : "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
                   }}
                 >
                   {i + 1}
@@ -266,14 +267,16 @@ const NeomorphicDashboard = () => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${currentPage === totalPages
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-gray-700"
-                  }`}
+                className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+                  currentPage === totalPages
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700"
+                }`}
                 style={{
-                  boxShadow: currentPage === totalPages
-                    ? 'inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff'
-                    : '4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff'
+                  boxShadow:
+                    currentPage === totalPages
+                      ? "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff"
+                      : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
                 }}
               >
                 &gt;
@@ -291,14 +294,15 @@ const NeomorphicDashboard = () => {
             <div
               className="bg-gray-200 rounded-3xl p-8 max-w-md w-full mx-4"
               style={{
-                boxShadow: '20px 20px 40px #9ca3af, -20px -20px 40px #ffffff'
+                boxShadow: "20px 20px 40px #9ca3af, -20px -20px 40px #ffffff",
               }}
               onClick={(e) => e.stopPropagation()}
             >
               <div
                 className="bg-gray-200 rounded-2xl p-4 mb-6"
                 style={{
-                  boxShadow: 'inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff'
+                  boxShadow:
+                    "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
                 }}
               >
                 <h3 className="text-lg font-semibold text-gray-800 text-center">
@@ -309,7 +313,8 @@ const NeomorphicDashboard = () => {
               <div
                 className="bg-gray-200 rounded-2xl p-4 mb-6"
                 style={{
-                  boxShadow: 'inset 6px 6px 12px #c1c5c9, inset -6px -6px 12px #ffffff'
+                  boxShadow:
+                    "inset 6px 6px 12px #c1c5c9, inset -6px -6px 12px #ffffff",
                 }}
               >
                 <NeomorphicDateTimePicker
@@ -323,7 +328,7 @@ const NeomorphicDashboard = () => {
                   onClick={closeDatePicker}
                   className="px-6 py-3 bg-gray-200 rounded-xl transition-all duration-200 hover:scale-105 text-gray-700 font-medium"
                   style={{
-                    boxShadow: '6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff'
+                    boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
                   }}
                 >
                   Cancel
