@@ -1,5 +1,5 @@
-import "@/entrypoints/content/components/HoverIcon/hover.css";
-const HoverElement: React.FC = () => {
+import "@/components/HoverIcon/hover.css";
+export const HoverElement: React.FC = () => {
   function isValidURL(str: string) {
     try {
       new URL(str);
@@ -62,11 +62,16 @@ const HoverElement: React.FC = () => {
         youtubeVideos.forEach((element: any) => {
           if (element.querySelector("a")?.href === list[0].target?.href) {
             goneOutside = true;
-            element.querySelector(".hover-icon-container").style.opacity = "1";
+            if (element.querySelector(".hover-icon-container")) {
+              element.querySelector(".hover-icon-container").style.opacity =
+                "1";
+            }
             return;
           }
           goneOutside = false;
-          element.querySelector(".hover-icon-container").style.opacity = "0";
+          if (element.querySelector(".hover-icon-container")) {
+            element.querySelector(".hover-icon-container").style.opacity = "0";
+          }
         });
       }
     });
@@ -110,5 +115,3 @@ const HoverElement: React.FC = () => {
 
   return null;
 };
-
-export default HoverElement;

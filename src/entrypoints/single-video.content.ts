@@ -10,7 +10,6 @@ export default defineContentScript({
     const durationElement = document.querySelector(
       `[class="ytp-time-duration"]`
     );
-    // Update this if something breaks
     const actualDuration = await fetch(location.href)
       .then((r) => r.text())
       .then((d) => {
@@ -29,7 +28,6 @@ export default defineContentScript({
         playbackSpeed?.data
       );
     });
-
     setTimeout(() => {
       observer.observe(settingsButton!, {
         childList: true,

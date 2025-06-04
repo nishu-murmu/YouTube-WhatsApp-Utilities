@@ -49,10 +49,6 @@ export function AddVideo() {
         <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 font-roboto">
           <div
             className="w-full max-w-4xl rounded-3xl bg-gray-200 p-8 border border-gray-300"
-            style={{
-              boxShadow:
-                "rgb(184, 188, 200) 12px 12px 24px, rgb(255, 255, 255) -12px -12px 24px",
-            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
@@ -72,7 +68,7 @@ export function AddVideo() {
                   </p>
                 </div>
                 <button
-                  className="p-3 rounded-xl text-gray-600 hover:text-gray-800 transition-all duration-200"
+                  className="p-3 rounded-xl text-gray-600 hover:text-gray-800 transition-all duration-200 cursor-pointer"
                   onClick={() => setIsOpen(false)}
                 >
                   ×
@@ -120,5 +116,3 @@ export function AddVideo() {
     </>
   );
 }
-
-export default AddVideo;

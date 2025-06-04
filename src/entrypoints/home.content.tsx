@@ -1,8 +1,8 @@
 import "~/assets/tailwind.css";
-import { AddVideo } from "./components/AddVideo";
-import HoverElement from "./components/HoverIcon/HoverIcon";
-import "./components/HoverIcon/hover.css";
-import NeomorphicDashboard from "./components/Dashboard";
+import "@/components/HoverIcon/hover.css";
+import { HoverElement } from "@/components/HoverIcon/HoverIcon";
+import { NeomorphicDashboard } from "@/components/Dashboard";
+import { AddVideo } from "@/components/AddVideo";
 
 export default defineContentScript({
   matches: ["<all_urls>"],

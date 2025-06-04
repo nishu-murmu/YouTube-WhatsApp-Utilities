@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 
-export const createShadowRootUiWrapper = async ({
+export async function createShadowRootUiWrapper({
   ctx,
   name,
   position,
@@ -12,7 +12,7 @@ export const createShadowRootUiWrapper = async ({
   position: "inline" | "overlay" | "modal";
   anchor: string;
   component: React.ReactNode;
-}) => {
+}) {
   return createShadowRootUi(ctx, {
     name,
     position,
@@ -28,15 +28,15 @@ export const createShadowRootUiWrapper = async ({
       root?.unmount();
     },
   });
-};
+}
 
-export const sendRuntimeMessage = ({
+export function sendRuntimeMessage({
   action,
   data,
 }: {
   action: string;
   data: any;
-}) => {
+}) {
   return new Promise((resolve) => {
     browser.runtime.sendMessage(
       {
@@ -46,26 +46,6 @@ export const sendRuntimeMessage = ({
       (callbackData) => resolve(callbackData)
     );
   });
-};
-
-export async function checkMissedSchedules() {
-  const { schedules } = (await browser.storage.local.get("schedules")) || {
-    schedules: [],
-  };
-  const now = Date.now();
-  const missedSchedules = schedules.filter(
-    (schedule: { name: string; time: string }) => {
-      return new Date(JSON.parse(schedule.time)).getTime() < now;
-    }
-  );
-  if (missedSchedules.length > 0) {
-    console.log("Missed schedules:", missedSchedules);
-    const remaining = schedules.filter(
-      (s: any) => !missedSchedules.includes(s)
-    );
-    await browser.storage.local.set({ schedules: remaining });
-  }
-  return missedSchedules;
 }
 
 export async function createSchedule({
@@ -89,13 +69,23 @@ export async function createSchedule({
   return true;
 }
 
-export async function clearSchedule({ name }: { name: string }) {
+export async function clearSchedule({ name }: { name?: string }) {
   browser.alarms.clear(name);
   const { schedules } = await browser.storage.local.get("schedules");
   browser.storage.local.set({
     schedules: schedules.filter(
       (s: { name: string; time: Date; id: string }) => s.name !== name
     ),
+  });
+  browser.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      if (tab.url?.includes("youtube.com")) {
+        browser.tabs.sendMessage(tab.id!, {
+          action: "REMOVE_SCHEDULE",
+          data: { name: name },
+        });
+      }
+    });
   });
 }
 
@@ -141,6 +131,34 @@ export function getSessionStorageItem(key: string) {
   try {
     return value !== null ? JSON.parse(value) : undefined;
   } catch {
-    return value; // Return raw string if not JSON
+    return value;
   }
+}
+
+export function toggleDashboard() {
+  browser.storage.local.get("dashboardVisible").then(({ dashboardVisible }) => {
+    browser.storage.local
+      .set({
+        dashboardVisible:
+          !dashboardVisible || typeof dashboardVisible === "undefined"
+            ? true
+            : false,
+      })
+      .then(() => {
+        browser.tabs
+          .query({ active: true, currentWindow: true })
+          .then((tabs) => {
+            const activeTab = tabs[0];
+            if (activeTab) {
+              browser.tabs.sendMessage(activeTab.id!, {
+                action: "TOGGLE_DASHBOARD",
+              });
+            }
+          });
+      });
+  });
+}
+
+export function getDifferenceInMinutes(now, schedule) {
+  return Math.floor((now - schedule) / 1000 / 60);
 }

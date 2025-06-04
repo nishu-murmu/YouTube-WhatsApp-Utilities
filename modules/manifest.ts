@@ -5,7 +5,7 @@ export default defineWxtModule({
     wxt.hook("build:manifestGenerated", (_, manifest) => {
       manifest.content_scripts ??= [];
       manifest.content_scripts.push({
-        css: ["./content-scripts/content.css"],
+        css: ["./content-scripts/home.css"],
         matches: ["https://www.youtube.com/*"],
       });
     });

@@ -4,6 +4,14 @@ browser.alarms.onAlarm.addListener((alarm) => {
     const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
     if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
+    const diff = getDifferenceInMinutes(
+      new Date().getTime(),
+      new Date(JSON.parse(currentSchedule.time)).getTime()
+    );
+    if (diff > 5) {
+      console.log(currentSchedule);
+      return;
+    }
     openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
     browser.notifications.create("notification-id-" + currentSchedule.id, {
       type: "basic",
@@ -13,17 +21,6 @@ browser.alarms.onAlarm.addListener((alarm) => {
       iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
     });
   });
-});
-
-browser.runtime.onStartup.addListener(async () => {
-  const allAlarms = await browser.alarms.getAll();
-  const now = Date.now();
-
-  for (const alarm of allAlarms) {
-    if (alarm.scheduledTime < now) {
-      console.log(alarm, "chekc");
-    }
-  }
 });
 
 browser.runtime.onMessage.addListener((request, _, sendResponse) => {
@@ -38,6 +35,9 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
       }).then((res) => {
         sendResponse(res);
       });
+      break;
+    case "TOGGLE_DASHBOARD":
+      toggleDashboard();
       break;
   }
   return true;
@@ -58,29 +58,7 @@ browser.notifications.onClicked.addListener((notificationId) => {
 export default defineBackground(() => {
   browser.commands.onCommand.addListener((command) => {
     if (command === "toggle-dashboard") {
-      browser.storage.local
-        .get("dashboardVisible")
-        .then(({ dashboardVisible }) => {
-          browser.storage.local
-            .set({
-              dashboardVisible:
-                !dashboardVisible || typeof dashboardVisible === "undefined"
-                  ? true
-                  : false,
-            })
-            .then(() => {
-              browser.tabs
-                .query({ active: true, currentWindow: true })
-                .then((tabs) => {
-                  const activeTab = tabs[0];
-                  if (activeTab) {
-                    browser.tabs.sendMessage(activeTab.id!, {
-                      action: "TOGGLE_DASHBOARD",
-                    });
-                  }
-                });
-            });
-        });
+      toggleDashboard();
     }
   });
 });

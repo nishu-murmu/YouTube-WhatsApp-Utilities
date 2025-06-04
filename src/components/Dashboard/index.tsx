@@ -1,12 +1,14 @@
 import { format } from "date-fns";
-import { Edit2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NeomorphicDateTimePicker } from "../DatePicker";
 
-const NeomorphicDashboard = () => {
+export const NeomorphicDashboard = () => {
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [editingDateId, setEditingDateId] = useState<any>(null);
   const [editingDate, setEditingDate] = useState<any>(null);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectAll, setSelectAll] = useState<boolean>(false);
   const pageSize = 5;
   const [scheduledVideos, setScheduledVideos] = useState<any>([]);
   const totalPages = Math.ceil(scheduledVideos.length / pageSize);
@@ -20,6 +22,7 @@ const NeomorphicDashboard = () => {
       setCurrentPage(page);
     }
   };
+
   const handleDateChange = (date: Date) => {
     if (editingDateId) {
       setScheduledVideos(
@@ -31,6 +34,7 @@ const NeomorphicDashboard = () => {
       );
     }
   };
+
   const toggleDatePicker = (id: string) => {
     if (editingDateId === id) {
       // Close if already editing this item
@@ -43,17 +47,110 @@ const NeomorphicDashboard = () => {
       setEditingDate(video ? JSON.parse(video.time) : new Date());
     }
   };
+
   const closeDatePicker = () => {
     setEditingDateId(null);
     setEditingDate(null);
   };
+
+  const toggleDashboard = () => {
+    sendRuntimeMessage({
+      action: "TOGGLE_DASHBOARD",
+      data: {},
+    });
+  };
+
+  const removeScheduleVideo = (id) => {
+    sendRuntimeMessage({
+      action: "CLEAR_SCHEDULE",
+      data: {
+        id,
+      },
+    });
+  };
+
+  // Checkbox selection handlers
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedItems(new Set());
+    } else {
+      const allCurrentIds = new Set(currentData.map((item: any) => item.id));
+      setSelectedItems(allCurrentIds);
+    }
+    setSelectAll(!selectAll);
+  };
+
+  const handleSelectItem = (id: string) => {
+    const newSelectedItems = new Set(selectedItems);
+    if (newSelectedItems.has(id)) {
+      newSelectedItems.delete(id);
+    } else {
+      newSelectedItems.add(id);
+    }
+    setSelectedItems(newSelectedItems);
+
+    // Update select all state
+    setSelectAll(
+      newSelectedItems.size === currentData.length && currentData.length > 0
+    );
+  };
+
+  const handleDeleteSelected = () => {
+    selectedItems.forEach((id) => {
+      removeScheduleVideo(id);
+    });
+    setSelectedItems(new Set());
+    setSelectAll(false);
+  };
+
+  const handleDeleteSingle = (id: string) => {
+    removeScheduleVideo(id);
+    // Remove from selected items if it was selected
+    const newSelectedItems = new Set(selectedItems);
+    newSelectedItems.delete(id);
+    setSelectedItems(newSelectedItems);
+  };
+
+  // Update select all state when data changes
+  useEffect(() => {
+    if (currentData.length === 0) {
+      setSelectAll(false);
+    } else {
+      const allCurrentSelected = currentData.every((item: any) =>
+        selectedItems.has(item.id)
+      );
+      setSelectAll(allCurrentSelected && selectedItems.size > 0);
+    }
+  }, [currentData, selectedItems]);
+
+  // Clear selections when page changes
+  useEffect(() => {
+    setSelectedItems(new Set());
+    setSelectAll(false);
+  }, [currentPage]);
 
   useEffect(() => {
     (async () => {
       const { schedules } = await browser.storage.local.get("schedules");
       setScheduledVideos(schedules || []);
     })();
+
+    const runtimeOnMessageListener = (request, _, sendResponse) => {
+      switch (request.action) {
+        case "REMOVE_SCHEDULE":
+          const { name } = request.data;
+          setScheduledVideos((prev) => prev.filter((r) => r.name !== name));
+          sendResponse(true);
+          break;
+      }
+      return true;
+    };
+    browser.runtime.onMessage.addListener(runtimeOnMessageListener);
+    return () => {
+      browser.runtime.onMessage.removeListener(runtimeOnMessageListener);
+    };
   }, []);
+
   useEffect(() => {
     (async () => {
       await browser.storage.local.set({ schedules: scheduledVideos });
@@ -61,17 +158,11 @@ const NeomorphicDashboard = () => {
   }, [scheduledVideos]);
 
   return (
-    <div className="p-6 bg-transparent min-h-screen flex justify-center fixed top-16 left-[50%] transform -translate-x-1/2 z-[999999]">
-      <div className="w-[1020px]">
-        <div
-          className="bg-gray-200 rounded-3xl p-8 border border-gray-300 mb-8"
-          style={{
-            boxShadow:
-              "rgb(184, 188, 200) 4px 4px 20px, rgb(255, 255, 255) -4px -4px 20px",
-          }}
-        >
+    <div className="p-6 bg-transparent min-h-screen flex justify-center fixed top-16 left-[50%] transform -translate-x-1/2 z-[999999] font-roboto">
+      <div className="w-[1200px]">
+        <div className="bg-gray-200 rounded-3xl p-8 border border-gray-300 mb-8">
           <div
-            className="bg-gray-200 rounded-2xl p-6 mb-6"
+            className="bg-gray-200 rounded-2xl p-6 mb-6 flex items-center justify-between"
             style={{
               boxShadow:
                 "inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff",
@@ -80,6 +171,26 @@ const NeomorphicDashboard = () => {
             <h1 className="text-2xl font-bold text-gray-800 text-center">
               Scheduled Videos
             </h1>
+            <div className="flex items-center space-x-4">
+              {selectedItems.size > 0 && (
+                <button
+                  onClick={handleDeleteSelected}
+                  className="px-4 py-2 bg-red-200 text-red-700 rounded-xl transition-all duration-200 hover:scale-105 font-medium flex items-center space-x-2"
+                  style={{
+                    boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
+                  }}
+                >
+                  <Trash2 size={16} />
+                  <span>Delete Selected ({selectedItems.size})</span>
+                </button>
+              )}
+              <button
+                className="p-3 rounded-xl text-gray-600 hover:text-gray-800 transition-all duration-200"
+                onClick={() => toggleDashboard()}
+              >
+                ×
+              </button>
+            </div>
           </div>
 
           <div
@@ -90,14 +201,49 @@ const NeomorphicDashboard = () => {
             }}
           >
             <div
-              className="grid grid-cols-12 gap-4 p-4 font-semibold text-gray-700 mb-2 bg-gray-200 rounded-xl"
+              className="grid grid-cols-14 gap-4 p-4 font-semibold text-gray-700 mb-2 bg-gray-200 rounded-xl"
               style={{
                 boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
               }}
             >
+              <div className="col-span-1 flex items-center justify-center">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    className="sr-only"
+                  />
+                  <div
+                    className={`w-12 h-12 rounded-lg transition-all duration-200 flex items-center justify-center ${
+                      selectAll ? "bg-blue-200" : "bg-gray-200"
+                    }`}
+                    style={{
+                      boxShadow: selectAll
+                        ? "inset 4px 4px 8px #bfdbfe, inset -4px -4px 8px #ffffff"
+                        : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
+                    }}
+                  >
+                    {selectAll && (
+                      <svg
+                        className="w-3 h-3 text-blue-700"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                </label>
+              </div>
               <div className="col-span-5">Video</div>
               <div className="col-span-4">Title</div>
               <div className="col-span-3">Schedule Date/Time</div>
+              <div className="col-span-1">Actions</div>
             </div>
 
             {currentData.length === 0 ? (
@@ -146,11 +292,51 @@ const NeomorphicDashboard = () => {
                 {currentData.map((item: any) => (
                   <div
                     key={item.id}
-                    className="grid grid-cols-12 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02]"
+                    className={`grid grid-cols-14 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
+                      selectedItems.has(item.id) ? "ring-2 ring-blue-300" : ""
+                    }`}
                     style={{
-                      boxShadow: "8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff",
+                      boxShadow: selectedItems.has(item.id)
+                        ? "8px 8px 16px #bfdbfe, -8px -8px 16px #ffffff"
+                        : "8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff",
                     }}
                   >
+                    <div className="col-span-1 flex items-center justify-center">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.has(item.id)}
+                          onChange={() => handleSelectItem(item.id)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`w-12 h-12 rounded-lg transition-all duration-200 flex items-center justify-center ${
+                            selectedItems.has(item.id)
+                              ? "bg-blue-200"
+                              : "bg-gray-200"
+                          }`}
+                          style={{
+                            boxShadow: selectedItems.has(item.id)
+                              ? "inset 4px 4px 8px #bfdbfe, inset -4px -4px 8px #ffffff"
+                              : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
+                          }}
+                        >
+                          {selectedItems.has(item.id) && (
+                            <svg
+                              className="w-3 h-3 text-blue-700"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </label>
+                    </div>
                     <div className="col-span-5">
                       <div
                         className="aspect-[16/9] rounded-2xl overflow-hidden bg-gray-300"
@@ -181,9 +367,9 @@ const NeomorphicDashboard = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="col-span-3 relative">
+                    <div className="col-span-3 flex items-center">
                       <div
-                        className="flex items-center bg-gray-200 p-4 rounded-2xl transition-all duration-200"
+                        className="w-full flex items-center bg-gray-200 p-4 rounded-2xl transition-all duration-200"
                         style={{
                           boxShadow:
                             "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
@@ -211,6 +397,19 @@ const NeomorphicDashboard = () => {
                           <Edit2 size={16} />
                         </button>
                       </div>
+                    </div>
+                    <div className="col-span-1 flex items-center justify-center">
+                      <button
+                        onClick={() => handleDeleteSingle(item.id)}
+                        className="p-3 rounded-xl bg-red-200 text-red-700 transition-all duration-200 hover:scale-105"
+                        style={{
+                          boxShadow:
+                            "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
+                        }}
+                        title="Delete this item"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -285,14 +484,13 @@ const NeomorphicDashboard = () => {
           </div>
         </div>
 
-        {/* Single DateTimePicker Instance - Positioned as Modal */}
         {editingDateId && (
           <div
             className="fixed inset-0 bg-transparent bg-opacity-30 flex items-center justify-center z-[9999999]"
             onClick={closeDatePicker}
           >
             <div
-              className="bg-gray-200 rounded-3xl p-8 max-w-md w-full mx-4"
+              className="bg-gray-200 rounded-3xl p-8 max-w-4xl w-full mx-4"
               style={{
                 boxShadow: "20px 20px 40px #9ca3af, -20px -20px 40px #ffffff",
               }}
@@ -341,5 +539,3 @@ const NeomorphicDashboard = () => {
     </div>
   );
 };
-
-export default NeomorphicDashboard;
