@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NeomorphicDateTimePicker } from "../DatePicker";
+import { NeoMorphicDateTimePicker } from "../DatePicker";
 
 export function AddVideo() {
   const [currentVideoData, setCurrentVideoData] = useState({
@@ -33,6 +33,7 @@ export function AddVideo() {
         url: `https://www.youtube.com/watch?v=${currentVideoData.videoId}`,
       },
     });
+    setDate12(new Date());
     setIsOpen(false);
   };
 
@@ -83,13 +84,12 @@ export function AddVideo() {
                   "inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff",
               }}
             >
-              <NeomorphicDateTimePicker
+              <NeoMorphicDateTimePicker
                 selectedDate={date12}
                 onChange={(newDate: any) => setDate12(newDate)}
               />
             </div>
 
-            {/* Action Buttons - Neomorphic */}
             <div className="flex justify-end gap-4">
               <button
                 className="px-6 py-3 rounded-xl font-medium text-gray-700 transition-all duration-200 hover:scale-105"

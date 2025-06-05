@@ -8,8 +8,14 @@ browser.alarms.onAlarm.addListener((alarm) => {
       new Date().getTime(),
       new Date(JSON.parse(currentSchedule.time)).getTime()
     );
-    if (diff > 5) {
-      console.log(currentSchedule);
+    if (diff >= 1) {
+      browser.storage.local
+        .get("missedSchedules")
+        .then(({ missedSchedules }) => {
+          browser.storage.local.set({
+            missedSchedules: [...(missedSchedules || []), currentSchedule],
+          });
+        });
       return;
     }
     openNewTab({ url: currentSchedule.url, name: currentSchedule.name });
@@ -19,6 +25,17 @@ browser.alarms.onAlarm.addListener((alarm) => {
       title: "Reminder",
       message: `Scheduled Video: ${currentSchedule.name}`,
       iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
+    });
+  });
+});
+
+browser.runtime.onStartup.addListener(() => {
+  browser.storage.local.get("schedules").then(({ schedules }) => {
+    browser.storage.local.set({
+      schedules: schedules.filter(
+        (schedule) =>
+          new Date(JSON.parse(schedule.time)).getTime() > new Date().getTime()
+      ),
     });
   });
 });
@@ -38,6 +55,21 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
       break;
     case "TOGGLE_DASHBOARD":
       toggleDashboard();
+      break;
+
+    case "BULK_SCHEDULE_VIDEO":
+      const { schedules } = request.data;
+      const promises = schedules.map(({ name, time, url, id }) => {
+        return createSchedule({
+          name,
+          time: new Date(JSON.parse(time)),
+          id,
+          url,
+        });
+      });
+      Promise.all(promises).then(() => {
+        sendResponse(true);
+      });
       break;
   }
   return true;

@@ -162,3 +162,16 @@ export function toggleDashboard() {
 export function getDifferenceInMinutes(now, schedule) {
   return Math.floor((now - schedule) / 1000 / 60);
 }
+
+export const removeScheduleVideo = (ids) => {
+  return new Promise((resolve) => {
+    browser.storage.local.get("schedules").then(({ schedules }) => {
+      browser.storage.local.set(
+        {
+          schedules: schedules.filter((schedule) => !ids.includes(schedule.id)),
+        },
+        () => resolve(true)
+      );
+    });
+  });
+};

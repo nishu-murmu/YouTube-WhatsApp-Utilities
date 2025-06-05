@@ -1,11 +1,12 @@
 import "~/assets/tailwind.css";
 import "@/components/HoverIcon/hover.css";
 import { HoverElement } from "@/components/HoverIcon/HoverIcon";
-import { NeomorphicDashboard } from "@/components/Dashboard";
+import { NeoMorphicDashboard } from "@/components/Dashboard";
 import { AddVideo } from "@/components/AddVideo";
+import NeoMorphicVideoTable from "@/components/MissedVideosTable";
 
 export default defineContentScript({
-  matches: ["<all_urls>"],
+  matches: ["https://www.youtube.com/*"],
   cssInjectionMode: "ui",
 
   async main(ctx) {
@@ -23,7 +24,15 @@ export default defineContentScript({
       name: "dashboard-component",
       position: "inline",
       anchor: "body",
-      component: <NeomorphicDashboard />,
+      component: <NeoMorphicDashboard />,
+    });
+
+    const missedVideosTableUi = await createShadowRootUiWrapper({
+      ctx,
+      name: "missed-videos-table-component",
+      position: "inline",
+      anchor: "body",
+      component: <NeoMorphicVideoTable />,
     });
 
     const addVideoUi = await createShadowRootUiWrapper({
@@ -34,17 +43,37 @@ export default defineContentScript({
       component: <AddVideo />,
     });
     addVideoUi.mount();
+
     browser.runtime.onMessage.addListener((request) => {
-      if (request.action === "TOGGLE_DASHBOARD") {
-        browser.storage.local
-          .get("dashboardVisible")
-          .then(({ dashboardVisible }) => {
-            if (dashboardVisible) {
-              dashboardUi.mount();
-            } else {
-              dashboardUi.remove();
-            }
-          });
+      switch (request.action) {
+        case "TOGGLE_DASHBOARD":
+          browser.storage.local
+            .get("dashboardVisible")
+            .then(({ dashboardVisible }) => {
+              if (dashboardVisible) {
+                dashboardUi.mount();
+              } else {
+                dashboardUi.remove();
+              }
+            });
+          break;
+        default:
+          break;
+      }
+    });
+
+    self.addEventListener("message", (event) => {
+      const { data } = event;
+      switch (data.action) {
+        case "REMOVE_MISSED_VIDEOS_TABLE":
+          missedVideosTableUi.remove();
+          break;
+      }
+    });
+
+    browser.storage.local.get("missedSchedules").then(({ missedSchedules }) => {
+      if (Array.isArray(missedSchedules) && missedSchedules?.length) {
+        missedVideosTableUi.mount();
       }
     });
   },
