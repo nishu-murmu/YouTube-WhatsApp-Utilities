@@ -16,9 +16,7 @@ This Chrome extension allows you to schedule YouTube videos for later viewing. Y
 
 ## Getting Started
 1. Clone this repository.
-2. Install dependencies using `pnpm install`.
-3. Build the extension using your preferred package manager script.
-4. Load the `public` directory as an unpacked extension in Chrome.
+2. Follow [WXT Docs](https://wxt.dev/guide/installation.html) to run this project.
 
 ## Contribution
 Contributions are welcome! To contribute:
@@ -30,3 +28,5 @@ For major changes, please open an issue first to discuss what you would like to 
 
 ## License
 This project is licensed under the MIT License.
+
+##### Made with [WXT](https://wxt.dev/) framework.
