@@ -1,24 +1,26 @@
 <div align="center">
 
-# ![Extension Icon](public/icon/icon-48.png) YouTube Video Scheduler
+![Extension Icon](public/icon/icon-48.png) 
+
+# ⏰ YouTube Video Scheduler
 
 </div>
 
 
-## Overview
+## 📅 Overview
 This Chrome extension allows you to schedule YouTube videos for later viewing. You can easily add, update, or remove scheduled videos directly from your browser. Additionally, the extension provides a real-time update of the video duration when you change the playback speed, helping you better manage your viewing time.
 
-## Features
+## ✨ Features
 - **Schedule YouTube Videos:** Add any YouTube video to your schedule for later viewing.
 - **Update or Remove Schedules:** Easily update the scheduled time or remove videos from your schedule.
-- **Real-Time Duration Update:** Instantly see the updated duration of a YouTube video when you change its playback speed (bonus feature).
 - **User-Friendly Dashboard:** Manage all your scheduled videos in a clean and intuitive dashboard.
+- **Real-Time Duration Update:** Instantly see the updated duration of a YouTube video when you change its playback speed (bonus feature).
 
-## Getting Started
+## 🌱 Getting Started
 1. Clone this repository.
 2. Follow [WXT Docs](https://wxt.dev/guide/installation.html) to run this project.
 
-## Contribution
+## 🤝 Contribution
 Contributions are welcome! To contribute:
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix.
@@ -26,7 +28,7 @@ Contributions are welcome! To contribute:
 
 For major changes, please open an issue first to discuss what you would like to change.
 
-## License
+## 📜 License
 This project is licensed under the MIT License.
 
 ##### Made with [WXT](https://wxt.dev/) framework.

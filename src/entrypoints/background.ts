@@ -24,7 +24,7 @@ browser.alarms.onAlarm.addListener((alarm) => {
       isClickable: true,
       title: "Reminder",
       message: `Scheduled Video: ${currentSchedule.name}`,
-      iconUrl: browser.runtime.getURL("/images/youtube-image.png"),
+      iconUrl: browser.runtime.getURL("/icon/icon-128.png"),
     });
   });
 });

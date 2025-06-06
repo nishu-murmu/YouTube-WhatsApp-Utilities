@@ -4,6 +4,7 @@ import DashboardWithData from "./DashboardWithData";
 import EditDateModal from "./EditDateModal";
 import EmptyDashboard from "./EmptyDashboard";
 import Pagination from "./Pagination";
+import { SearchBar } from "./SearchBar";
 import TableHeader from "./TableHeader";
 
 export const NeoMorphicDashboard = () => {
@@ -14,11 +15,29 @@ export const NeoMorphicDashboard = () => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const pageSize = 5;
   const [scheduledVideos, setScheduledVideos] = useState<any>([]);
-  const totalPages = Math.ceil(scheduledVideos.length / pageSize);
-  const currentData = scheduledVideos.slice(
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredVideos = scheduledVideos.filter((video) =>
+    video.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredVideos.length / pageSize);
+  const currentData = filteredVideos.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+    setSelectedItems(new Set());
+    setSelectAll(false);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setCurrentPage(1);
+    setSelectedItems(new Set());
+    setSelectAll(false);
+  };
 
   useEffect(() => {
     if (currentData.length === 0) {
@@ -73,6 +92,13 @@ export const NeoMorphicDashboard = () => {
             setSelectAll={setSelectAll}
             setSelectedItems={setSelectedItems}
             setScheduledVideos={setScheduledVideos}
+          />
+
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            onClearSearch={handleClearSearch}
+            totalResults={filteredVideos.length}
           />
 
           <div
