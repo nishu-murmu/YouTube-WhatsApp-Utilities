@@ -1,7 +1,8 @@
-var currentScheduleInfo: any = null;
+import type { Schedule } from '../types';
+var currentScheduleInfo: Schedule | null = null;
 browser.alarms.onAlarm.addListener((alarm) => {
-  browser.storage.local.get("schedules").then(({ schedules }) => {
-    const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
+  browser.storage.local.get("schedules").then(({ schedules }: { schedules: Schedule[] }) => {
+    const currentSchedule = schedules.find((s: Schedule) => s.name === alarm.name);
     if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
     const diff = getDifferenceInMinutes(
@@ -11,7 +12,7 @@ browser.alarms.onAlarm.addListener((alarm) => {
     if (diff >= 1) {
       browser.storage.local
         .get("missedSchedules")
-        .then(({ missedSchedules }) => {
+        .then(({ missedSchedules }: { missedSchedules: Schedule[] }) => {
           browser.storage.local.set({
             missedSchedules: [...(missedSchedules || []), currentSchedule],
           });
@@ -58,7 +59,7 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
       break;
 
     case "BULK_SCHEDULE_VIDEO":
-      const { schedules } = request.data;
+      const { schedules }: { schedules: Schedule[] } = request.data;
       const promises = schedules.map(({ name, time, url, id }) => {
         return createSchedule({
           name,

@@ -1,6 +1,15 @@
-import { format, formatDate } from "date-fns";
+import { format } from "date-fns";
 import { NeoMorphicCheckbox } from "./NeoMorphicCheckbox";
 import { Edit2 } from "lucide-react";
+import type { Schedule } from '../../types';
+
+interface VideoRowProps {
+  item: Schedule;
+  isSelected: boolean;
+  onSelect: () => void;
+  onEditDate: () => void;
+  isEditingDate: boolean;
+}
 
 export const VideoRow = ({
   item,
@@ -8,7 +17,7 @@ export const VideoRow = ({
   onSelect,
   onEditDate,
   isEditingDate,
-}) => {
+}: VideoRowProps) => {
   return (
     <div
       key={item.id}

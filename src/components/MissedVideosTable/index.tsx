@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { Schedule } from '../../types';
 import { TableHeader } from "./TableHeader";
 import { DateEditModal } from "./DateEditModal";
 import { SaveButton } from "./SaveButton";
@@ -9,29 +10,29 @@ import { TableColumnHeaders } from "./TableColumnHeaders";
 
 export default function NeoMorphicVideoTable() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [editingDateId, setEditingDateId] = useState(null);
-  const [editingDate, setEditingDate] = useState(null);
-  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [editingDateId, setEditingDateId] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<Date | null>(null);
+  const [selectedItems, setSelectedItems] = useState(new Set<string>());
   const [selectAll, setSelectAll] = useState(false);
   const pageSize = 5;
 
-  const [videoData, setVideoData] = useState<any>();
+  const [videoData, setVideoData] = useState<Schedule[] | undefined>(undefined);
 
   const totalPages = Math.ceil((videoData?.length || 0) / pageSize);
-  const currentData =
+  const currentData: Schedule[] =
     videoData?.slice((currentPage - 1) * pageSize, currentPage * pageSize) ||
     [];
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
-  const handleDateChange = (date) => {
-    if (editingDateId) {
+  const handleDateChange = (date: Date) => {
+    if (editingDateId && videoData) {
       setVideoData(
-        videoData.map((video) =>
+        videoData.map((video: Schedule) =>
           video.id === editingDateId
             ? { ...video, time: JSON.stringify(date) }
             : video
@@ -40,14 +41,14 @@ export default function NeoMorphicVideoTable() {
     }
   };
 
-  const toggleDatePicker = (id) => {
+  const toggleDatePicker = (id: string) => {
     if (editingDateId === id) {
       setEditingDateId(null);
       setEditingDate(null);
     } else {
-      const video = videoData.find((v) => v.id === id);
+      const video = videoData?.find((v: Schedule) => v.id === id);
       setEditingDateId(id);
-      setEditingDate(video ? JSON.parse(video.time) : new Date());
+      setEditingDate(video ? new Date(JSON.parse(video.time)) : new Date());
     }
   };
 
@@ -58,16 +59,16 @@ export default function NeoMorphicVideoTable() {
 
   const handleSelectAll = () => {
     if (selectAll) {
-      setSelectedItems(new Set());
+      setSelectedItems(new Set<string>());
     } else {
-      const allCurrentIds = new Set(currentData.map((item) => item.id));
+      const allCurrentIds = new Set(currentData.map((item: Schedule) => item.id));
       setSelectedItems(allCurrentIds);
     }
     setSelectAll(!selectAll);
   };
 
-  const handleSelectItem = (id) => {
-    const newSelectedItems = new Set(selectedItems);
+  const handleSelectItem = (id: string) => {
+    const newSelectedItems = new Set<string>(selectedItems);
     if (newSelectedItems.has(id)) {
       newSelectedItems.delete(id);
     } else {
@@ -81,7 +82,7 @@ export default function NeoMorphicVideoTable() {
   };
 
   const handleSave = async () => {
-    const selectedData = videoData.filter((item) => selectedItems.has(item.id));
+    const selectedData = videoData?.filter((item: Schedule) => selectedItems.has(item.id));
     sendRuntimeMessage({
       action: "BULK_SCHEDULE_VIDEO",
       data: {
@@ -103,7 +104,7 @@ export default function NeoMorphicVideoTable() {
     if (currentData.length === 0) {
       setSelectAll(false);
     } else {
-      const allCurrentSelected = currentData.every((item) =>
+      const allCurrentSelected = currentData.every((item: Schedule) =>
         selectedItems.has(item.id)
       );
       setSelectAll(allCurrentSelected && selectedItems.size > 0);
@@ -148,7 +149,7 @@ export default function NeoMorphicVideoTable() {
               <EmptyTable />
             ) : (
               <div className="space-y-3">
-                {currentData.map((item) => (
+                {currentData.map((item: Schedule) => (
                   <VideoRow
                     key={item.id}
                     item={item}

@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
+interface NeoMorphicDateTimePickerProps {
+  selectedDate: Date | string | null | undefined;
+  onChange: (date: Date) => void;
+}
+
+export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: NeoMorphicDateTimePickerProps) => {
   const currentDateTime = new Date();
 
-  const parseDate = (dateInput) => {
+  const parseDate = (dateInput: Date | string | null | undefined): Date => {
     if (!dateInput) return new Date();
     if (dateInput instanceof Date) return dateInput;
     if (typeof dateInput === "string") {
@@ -32,11 +37,11 @@ export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
     minute: false,
   });
 
-  const dateRef = useRef(null);
-  const monthRef = useRef(null);
-  const yearRef = useRef(null);
-  const hourRef = useRef(null);
-  const minuteRef = useRef(null);
+  const dateRef = useRef<HTMLDivElement>(null);
+  const monthRef = useRef<HTMLDivElement>(null);
+  const yearRef = useRef<HTMLDivElement>(null);
+  const hourRef = useRef<HTMLDivElement>(null);
+  const minuteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedDate) {
@@ -147,27 +152,35 @@ export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
     if (date > maxDays) {
       setDate(maxDays);
     }
-  }, [year, month, date, hour, minute]);
+  }, [year, month, date, hour, minute, onChange, selectedDate]); // Added onChange and selectedDate to dependency array
 
   useEffect(() => {
     if (onChange) {
       const newDateObj = new Date(year, month - 1, date, hour, minute);
-      const currentSelectedDate = parseDate(selectedDate);
+      // Ensure selectedDate is parsed correctly before comparison
+      const currentSelectedDate = selectedDate ? parseDate(selectedDate) : null;
       if (
-        !selectedDate ||
+        !currentSelectedDate || // if selectedDate was null/undefined initially
         newDateObj.getTime() !== currentSelectedDate.getTime()
       ) {
         onChange(newDateObj);
       }
     }
-  }, [date, month, year, hour, minute]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, month, year, hour, minute]); // onChange is excluded as per original logic, but consider adding if it can change
 
-  const renderWheel = (values, current, setter, type, ref) => {
+  const renderWheel = (
+    values: (string | number)[],
+    current: string | number,
+    setter: (value: any) => void, // Consider a more specific type if possible
+    type: keyof typeof isScrolling,
+    ref: React.RefObject<HTMLDivElement>
+  ) => {
     useEffect(() => {
       const element = ref.current;
       if (!element) return;
 
-      const handleWheelEvent = (e) => {
+      const handleWheelEvent = (e: React.WheelEvent<HTMLDivElement>) => {
         e.stopPropagation();
         e.preventDefault();
         if (values.length === 0) return;

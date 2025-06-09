@@ -1,5 +1,11 @@
-const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
-  const handlePageChange = (page: any) => {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Pagination = ({ currentPage, totalPages, setCurrentPage }: PaginationProps) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

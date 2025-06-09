@@ -1,5 +1,18 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import type { Schedule } from '../../types';
+
+interface DashboardWithDataProps {
+  selectedItems: Set<string>;
+  currentData: Schedule[];
+  editingDateId: string | null;
+  setEditingDateId: React.Dispatch<React.SetStateAction<string | null>>;
+  setEditingDate: React.Dispatch<React.SetStateAction<string | null>>;
+  scheduledVideos: Schedule[];
+  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
+  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
+}
 
 const DashboardWithData = ({
   selectedItems,
@@ -11,13 +24,13 @@ const DashboardWithData = ({
   setSelectedItems,
   setSelectAll,
   setScheduledVideos,
-}) => {
+}: DashboardWithDataProps) => {
   const toggleDatePicker = (id: string) => {
     if (editingDateId === id) {
       setEditingDateId(null);
       setEditingDate(null);
     } else {
-      const video = scheduledVideos.find((v: any) => v.id === id);
+      const video = scheduledVideos.find((v: Schedule) => v.id === id);
       setEditingDateId(id);
       setEditingDate(video ? JSON.parse(video.time) : new Date());
     }
@@ -42,7 +55,7 @@ const DashboardWithData = ({
   };
   return (
     <div className="space-y-3">
-      {currentData.map((item: any) => (
+      {currentData.map((item: Schedule) => (
         <div
           key={item.id}
           className={`grid grid-cols-14 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
