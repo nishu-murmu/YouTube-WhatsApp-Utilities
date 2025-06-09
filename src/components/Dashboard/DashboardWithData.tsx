@@ -11,15 +11,15 @@ const DashboardWithData = ({
   setSelectedItems,
   setSelectAll,
   setScheduledVideos,
-}) => {
+}: DashboardWithDataProps) => {
   const toggleDatePicker = (id: string) => {
     if (editingDateId === id) {
       setEditingDateId(null);
       setEditingDate(null);
     } else {
-      const video = scheduledVideos.find((v: any) => v.id === id);
+      const video = scheduledVideos.find((v) => v.id === id);
       setEditingDateId(id);
-      setEditingDate(video ? JSON.parse(video.time) : new Date());
+      setEditingDate(video ? JSON.parse(video.time as string) : new Date());
     }
   };
   const handleSelectItem = (id: string) => {
@@ -42,7 +42,7 @@ const DashboardWithData = ({
   };
   return (
     <div className="space-y-3">
-      {currentData.map((item: any) => (
+      {currentData.map((item) => (
         <div
           key={item.id}
           className={`grid grid-cols-14 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
@@ -125,9 +125,9 @@ const DashboardWithData = ({
               }}
             >
               <div className="text-gray-700 flex-1 text-sm">
-                {format(JSON.parse(item.time), "PPP")}
+                {format(JSON.parse(item.time as string), "PPP")}
                 <br />
-                {format(JSON.parse(item.time), "HH:mm:ss")}
+                {format(JSON.parse(item.time as string), "HH:mm:ss")}
               </div>
               <button
                 onClick={() => toggleDatePicker(item.id)}

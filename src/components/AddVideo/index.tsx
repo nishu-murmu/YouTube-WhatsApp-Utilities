@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { NeoMorphicDateTimePicker } from "../DatePicker";
 
 export function AddVideo() {
-  const [currentVideoData, setCurrentVideoData] = useState({
+  const [currentVideoData, setCurrentVideoData] = useState<VideoData>({
     videoId: "",
     videoTitle: "",
   });
-  const [date12, setDate12] = useState(new Date());
+  const [date12, setDate12] = useState<Date>(new Date());
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleMessage = (e) => {
+    const handleMessage = (e: MessageEvent) => {
       if (e?.data?.type === "ADD_VIDEO") {
         setCurrentVideoData(e?.data?.data);
         setIsOpen(true);
@@ -86,7 +86,7 @@ export function AddVideo() {
             >
               <NeoMorphicDateTimePicker
                 selectedDate={date12}
-                onChange={(newDate: any) => setDate12(newDate)}
+                onChange={(newDate: Date) => setDate12(newDate)}
               />
             </div>
 

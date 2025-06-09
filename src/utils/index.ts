@@ -30,12 +30,12 @@ export async function createShadowRootUiWrapper({
   });
 }
 
-export function sendRuntimeMessage({
+export function sendRuntimeMessage<T = unknown>({
   action,
   data,
 }: {
   action: string;
-  data: any;
+  data: T;
 }) {
   return new Promise((resolve) => {
     browser.runtime.sendMessage(
@@ -48,18 +48,8 @@ export function sendRuntimeMessage({
   });
 }
 
-export async function createSchedule({
-  name,
-  time,
-  url,
-  id,
-}: {
-  name: string;
-  time: Date;
-  url: string;
-  id: string;
-}) {
-  const when = time.getTime();
+export async function createSchedule({ name, time, url, id }: Schedule) {
+  const when = (time as Date).getTime();
   await browser.alarms.create(name, { when });
   let { schedules } = await browser.storage.local.get("schedules");
   schedules ??= [];

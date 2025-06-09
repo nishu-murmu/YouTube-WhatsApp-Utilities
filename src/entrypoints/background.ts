@@ -1,7 +1,9 @@
-var currentScheduleInfo: any = null;
+let currentScheduleInfo: Schedule | null = null;
 browser.alarms.onAlarm.addListener((alarm) => {
   browser.storage.local.get("schedules").then(({ schedules }) => {
-    const currentSchedule = schedules.find((s: any) => s.name === alarm.name);
+    const currentSchedule = schedules.find(
+      (s: Schedule) => s.name === alarm.name
+    );
     if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
     const diff = getDifferenceInMinutes(
@@ -78,7 +80,7 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
 browser.notifications.onClicked.addListener((notificationId) => {
   if (notificationId.startsWith("notification-id-")) {
     openNewTab({
-      name: currentScheduleInfo.name,
+      name: (currentScheduleInfo as Schedule).name,
       url: `https://www.youtube.com/watch?v=${notificationId.replace(
         "notification-id-",
         ""

@@ -1,4 +1,6 @@
 import "@/components/HoverIcon/hover.css";
+import { useEffect } from "react";
+
 export const HoverElement: React.FC = () => {
   function isValidURL(str: string) {
     try {
@@ -16,7 +18,8 @@ export const HoverElement: React.FC = () => {
     const addHoverIcons = () => {
       const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
       youtubeVideos.forEach((element, index) => {
-        if (element.getAttribute("element-injected") === "true") return;
+        if ((element as Element).getAttribute("element-injected") === "true")
+          return;
         const hoverContainer = document.createElement("div");
         hoverContainer.className = "hover-icon-container neomorphic-icon";
         hoverContainer.id = `${index}`;
@@ -31,12 +34,15 @@ export const HoverElement: React.FC = () => {
   `;
 
         element.prepend(hoverContainer);
-        element.setAttribute("element-injected", "true");
-        const videoId = element.querySelector("a")?.href
-          ? getYoutubeVideoId(element.querySelector("a")?.href || "")
+        (element as Element).setAttribute("element-injected", "true");
+        const videoId = (element.querySelector("a") as HTMLAnchorElement)?.href
+          ? getYoutubeVideoId(
+              (element.querySelector("a") as HTMLAnchorElement)?.href || ""
+            )
           : "";
 
-        const videoTitle = element.querySelector("h3")?.innerText || "";
+        const videoTitle =
+          (element.querySelector("h3") as HTMLElement)?.innerText || "";
         const hoverIconClickHandler = () => {
           self.postMessage(
             {
@@ -50,27 +56,40 @@ export const HoverElement: React.FC = () => {
           );
         };
 
-        element
-          .querySelector("#hover-icon")
-          ?.addEventListener("click", hoverIconClickHandler);
+        (element.querySelector("#hover-icon") as HTMLElement)?.addEventListener(
+          "click",
+          hoverIconClickHandler
+        );
       });
     };
-    var goneOutside = false;
-    const observer = new MutationObserver((list: any) => {
+    let goneOutside = false;
+    const observer = new MutationObserver((list: MutationRecord[]) => {
       const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
-      if (list[0].target?.href) {
-        youtubeVideos.forEach((element: any) => {
-          if (element.querySelector("a")?.href === list[0].target?.href) {
+      if (
+        list[0]?.target &&
+        (list[0].target as HTMLElement).hasAttribute("href")
+      ) {
+        youtubeVideos.forEach((element) => {
+          const anchor = element.querySelector("a") as HTMLAnchorElement | null;
+          if (
+            anchor?.href ===
+            (list[0].target as HTMLAnchorElement).getAttribute("href")
+          ) {
             goneOutside = true;
-            if (element.querySelector(".hover-icon-container")) {
-              element.querySelector(".hover-icon-container").style.opacity =
-                "1";
+            const hoverIcon = element.querySelector(
+              ".hover-icon-container"
+            ) as HTMLElement | null;
+            if (hoverIcon) {
+              hoverIcon.style.opacity = "1";
             }
             return;
           }
           goneOutside = false;
-          if (element.querySelector(".hover-icon-container")) {
-            element.querySelector(".hover-icon-container").style.opacity = "0";
+          const hoverIcon = element.querySelector(
+            ".hover-icon-container"
+          ) as HTMLElement | null;
+          if (hoverIcon) {
+            hoverIcon.style.opacity = "0";
           }
         });
       }
@@ -78,23 +97,30 @@ export const HoverElement: React.FC = () => {
     setTimeout(() => {
       addHoverIcons();
       const newObserver = new MutationObserver(() => {
-        observer.observe(document.querySelector(`#media-container-link`)!, {
+        const mediaContainer = document.querySelector(`#media-container-link`);
+        if (mediaContainer) {
+          observer.observe(mediaContainer, {
+            attributes: true,
+          });
+        }
+      });
+      const videoPreview = document.querySelector(`#video-preview`);
+      if (videoPreview) {
+        newObserver.observe(videoPreview, {
           attributes: true,
+          childList: true,
+          subtree: true,
         });
-      });
-      newObserver.observe(document.querySelector(`#video-preview`)!, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
+      }
     }, 3000);
 
     const listObserver = new MutationObserver(() => {
       addHoverIcons();
     });
     setTimeout(() => {
-      if (document.querySelector(`#contents`)) {
-        listObserver.observe(document.querySelector(`#contents`)!, {
+      const contents = document.querySelector(`#contents`);
+      if (contents) {
+        listObserver.observe(contents, {
           childList: true,
         });
       }
@@ -108,7 +134,7 @@ export const HoverElement: React.FC = () => {
       document
         .querySelectorAll("ytd-rich-item-renderer")
         .forEach((thumbnail) => {
-          thumbnail.removeAttribute("element-injected");
+          (thumbnail as Element).removeAttribute("element-injected");
         });
     };
   }, []);

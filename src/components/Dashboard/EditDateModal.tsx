@@ -7,7 +7,7 @@ const EditDateModal = ({
   setScheduledVideos,
   scheduledVideos,
   editingDate,
-}) => {
+}: EditDateModalProps) => {
   const closeDatePicker = () => {
     setEditingDateId(null);
     setEditingDate(null);
@@ -16,7 +16,7 @@ const EditDateModal = ({
   const handleDateChange = (date: Date) => {
     if (editingDateId) {
       setScheduledVideos(
-        scheduledVideos.map((video: any) =>
+        scheduledVideos.map((video) =>
           video.id === editingDateId
             ? { ...video, scheduleDate: date, time: JSON.stringify(date) }
             : video
@@ -56,7 +56,7 @@ const EditDateModal = ({
           }}
         >
           <NeoMorphicDateTimePicker
-            selectedDate={editingDate}
+            selectedDate={editingDate as Date}
             onChange={handleDateChange}
           />
         </div>

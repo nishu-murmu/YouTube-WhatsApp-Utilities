@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: any) => {
+export const NeoMorphicDateTimePicker = ({
+  selectedDate,
+  onChange,
+}: NeoMorphicDateTimePickerProps) => {
   const currentDateTime = new Date();
 
   const parseDate = (dateInput) => {

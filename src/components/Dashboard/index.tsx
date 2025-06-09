@@ -8,14 +8,14 @@ import { SearchBar } from "./SearchBar";
 import TableHeader from "./TableHeader";
 
 export const NeoMorphicDashboard = () => {
-  const [currentPage, setCurrentPage] = useState<any>(1);
-  const [editingDateId, setEditingDateId] = useState<any>(null);
-  const [editingDate, setEditingDate] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [editingDateId, setEditingDateId] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<Date | null>(null);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const pageSize = 5;
-  const [scheduledVideos, setScheduledVideos] = useState<any>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [scheduledVideos, setScheduledVideos] = useState<Schedule[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const filteredVideos = scheduledVideos.filter((video) =>
     video.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -25,7 +25,7 @@ export const NeoMorphicDashboard = () => {
     currentPage * pageSize
   );
 
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
     setSelectedItems(new Set());
@@ -43,7 +43,7 @@ export const NeoMorphicDashboard = () => {
     if (currentData.length === 0) {
       setSelectAll(false);
     } else {
-      const allCurrentSelected = currentData.every((item: any) =>
+      const allCurrentSelected = currentData.every((item) =>
         selectedItems.has(item.id)
       );
       setSelectAll(allCurrentSelected && selectedItems.size > 0);
@@ -61,7 +61,11 @@ export const NeoMorphicDashboard = () => {
       setScheduledVideos(schedules || []);
     })();
 
-    const runtimeOnMessageListener = (request, _, sendResponse) => {
+    const runtimeOnMessageListener = (
+      request: { action: string; data: { name: string } },
+      _: unknown,
+      sendResponse: (value: unknown) => void
+    ) => {
       switch (request.action) {
         case "REMOVE_SCHEDULE":
           const { name } = request.data;

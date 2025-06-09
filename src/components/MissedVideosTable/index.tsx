@@ -9,13 +9,12 @@ import { TableColumnHeaders } from "./TableColumnHeaders";
 
 export default function NeoMorphicVideoTable() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [editingDateId, setEditingDateId] = useState(null);
-  const [editingDate, setEditingDate] = useState(null);
-  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [editingDateId, setEditingDateId] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<Date | null>(null);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [selectAll, setSelectAll] = useState(false);
   const pageSize = 5;
-
-  const [videoData, setVideoData] = useState<any>();
+  const [videoData, setVideoData] = useState<Schedule[]>([]);
 
   const totalPages = Math.ceil((videoData?.length || 0) / pageSize);
   const currentData =
@@ -47,7 +46,7 @@ export default function NeoMorphicVideoTable() {
     } else {
       const video = videoData.find((v) => v.id === id);
       setEditingDateId(id);
-      setEditingDate(video ? JSON.parse(video.time) : new Date());
+      setEditingDate(video ? JSON.parse(video.time as string) : new Date());
     }
   };
 
