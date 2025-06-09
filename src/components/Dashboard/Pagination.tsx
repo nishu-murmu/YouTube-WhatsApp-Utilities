@@ -1,5 +1,9 @@
-const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
-  const handlePageChange = (page: any) => {
+const Pagination = ({
+  currentPage,
+  totalPages,
+  setCurrentPage,
+}: PaginationProps) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

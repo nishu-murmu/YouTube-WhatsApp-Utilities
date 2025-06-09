@@ -5,7 +5,7 @@ const DashboardHeader = ({
   setScheduledVideos,
   setSelectedItems,
   setSelectAll,
-}) => {
+}: DashboardHeaderProps) => {
   const toggleDashboard = () => {
     sendRuntimeMessage({
       action: "TOGGLE_DASHBOARD",

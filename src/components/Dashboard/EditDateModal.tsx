@@ -7,7 +7,7 @@ const EditDateModal = ({
   setScheduledVideos,
   scheduledVideos,
   editingDate,
-}) => {
+}: EditDateModalProps) => {
   const closeDatePicker = () => {
     setEditingDateId(null);
     setEditingDate(null);
@@ -16,9 +16,9 @@ const EditDateModal = ({
   const handleDateChange = (date: Date) => {
     if (editingDateId) {
       setScheduledVideos(
-        scheduledVideos.map((video: any) =>
+        scheduledVideos.map((video: Schedule) =>
           video.id === editingDateId
-            ? { ...video, scheduleDate: date, time: JSON.stringify(date) }
+            ? { ...video, time: JSON.stringify(date) }
             : video
         )
       );

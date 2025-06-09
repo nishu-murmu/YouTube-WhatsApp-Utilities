@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import type { Schedule } from '../../types'; // Not directly used, but good for consistency
 import { NeoMorphicDateTimePicker } from "../DatePicker";
 
 export function AddVideo() {
@@ -10,7 +11,7 @@ export function AddVideo() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleMessage = (e) => {
+    const handleMessage = (e: MessageEvent<{ type: string; data: { videoId: string; videoTitle: string } }>) => {
       if (e?.data?.type === "ADD_VIDEO") {
         setCurrentVideoData(e?.data?.data);
         setIsOpen(true);
@@ -86,7 +87,7 @@ export function AddVideo() {
             >
               <NeoMorphicDateTimePicker
                 selectedDate={date12}
-                onChange={(newDate: any) => setDate12(newDate)}
+                onChange={(newDate: Date) => setDate12(newDate)}
               />
             </div>
 

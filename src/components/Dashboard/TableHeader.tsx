@@ -3,13 +3,15 @@ const TableHeader = ({
   currentData,
   setSelectAll,
   setSelectedItems,
-}) => {
+}: TableHeaderProps) => {
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectedItems(new Set());
     } else {
-      const allCurrentIds = new Set(currentData.map((item: any) => item.id));
-      setSelectedItems(allCurrentIds as any);
+      const allCurrentIds = new Set(
+        currentData.map((item: Schedule) => item.id)
+      );
+      setSelectedItems(allCurrentIds);
     }
     setSelectAll(!selectAll);
   };
