@@ -1,6 +1,5 @@
 import "~/assets/tailwind.css";
 import "@/components/HoverIcon/hover.css";
-import type { Schedule } from '../types';
 import { HoverElement } from "@/components/HoverIcon/HoverIcon";
 import { NeoMorphicDashboard } from "@/components/Dashboard";
 import { AddVideo } from "@/components/AddVideo";
@@ -72,7 +71,7 @@ export default defineContentScript({
       }
     });
 
-    browser.storage.local.get("missedSchedules").then(({ missedSchedules }: { missedSchedules: Schedule[] }) => {
+    browser.storage.local.get("missedSchedules").then(({ missedSchedules }) => {
       if (Array.isArray(missedSchedules) && missedSchedules?.length) {
         missedVideosTableUi.mount();
       }

@@ -1,18 +1,5 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { format } from "date-fns";
-import type { Schedule } from '../../types';
-
-interface DashboardWithDataProps {
-  selectedItems: Set<string>;
-  currentData: Schedule[];
-  editingDateId: string | null;
-  setEditingDateId: React.Dispatch<React.SetStateAction<string | null>>;
-  setEditingDate: React.Dispatch<React.SetStateAction<string | null>>;
-  scheduledVideos: Schedule[];
-  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
-  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
-  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
-}
 
 const DashboardWithData = ({
   selectedItems,

@@ -1,12 +1,3 @@
-import type { Schedule } from '../../types';
-
-interface TableHeaderProps {
-  selectAll: boolean;
-  currentData: Schedule[];
-  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
-}
-
 const TableHeader = ({
   selectAll,
   currentData,
@@ -17,7 +8,9 @@ const TableHeader = ({
     if (selectAll) {
       setSelectedItems(new Set());
     } else {
-      const allCurrentIds = new Set(currentData.map((item: Schedule) => item.id));
+      const allCurrentIds = new Set(
+        currentData.map((item: Schedule) => item.id)
+      );
       setSelectedItems(allCurrentIds);
     }
     setSelectAll(!selectAll);

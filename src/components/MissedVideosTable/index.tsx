@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { Schedule } from '../../types';
 import { TableHeader } from "./TableHeader";
 import { DateEditModal } from "./DateEditModal";
 import { SaveButton } from "./SaveButton";
@@ -61,7 +60,9 @@ export default function NeoMorphicVideoTable() {
     if (selectAll) {
       setSelectedItems(new Set<string>());
     } else {
-      const allCurrentIds = new Set(currentData.map((item: Schedule) => item.id));
+      const allCurrentIds = new Set(
+        currentData.map((item: Schedule) => item.id)
+      );
       setSelectedItems(allCurrentIds);
     }
     setSelectAll(!selectAll);
@@ -82,7 +83,9 @@ export default function NeoMorphicVideoTable() {
   };
 
   const handleSave = async () => {
-    const selectedData = videoData?.filter((item: Schedule) => selectedItems.has(item.id));
+    const selectedData = videoData?.filter((item: Schedule) =>
+      selectedItems.has(item.id)
+    );
     sendRuntimeMessage({
       action: "BULK_SCHEDULE_VIDEO",
       data: {

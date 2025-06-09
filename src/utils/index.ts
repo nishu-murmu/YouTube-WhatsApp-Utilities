@@ -1,5 +1,4 @@
 import ReactDOM from "react-dom/client";
-import type { Schedule } from '../types';
 
 export async function createShadowRootUiWrapper({
   ctx,
@@ -62,7 +61,8 @@ export async function createSchedule({
 }) {
   const when = time.getTime();
   await browser.alarms.create(name, { when });
-  let { schedules }: { schedules: Schedule[] } = await browser.storage.local.get("schedules");
+  let { schedules }: { schedules: Schedule[] } =
+    await browser.storage.local.get("schedules");
   schedules ??= [];
   await browser.storage.local.set({
     schedules: [...schedules, { name, time: JSON.stringify(time), url, id }],
@@ -72,11 +72,10 @@ export async function createSchedule({
 
 export async function clearSchedule({ name }: { name?: string }) {
   browser.alarms.clear(name);
-  const { schedules }: { schedules: Schedule[] } = await browser.storage.local.get("schedules");
+  const { schedules }: { schedules: Schedule[] } =
+    await browser.storage.local.get("schedules");
   browser.storage.local.set({
-    schedules: schedules.filter(
-      (s: Schedule) => s.name !== name
-    ),
+    schedules: schedules.filter((s: Schedule) => s.name !== name),
   });
   browser.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
@@ -166,10 +165,12 @@ export function getDifferenceInMinutes(now, schedule) {
 
 export const removeScheduleVideo = (ids: string[]) => {
   return new Promise((resolve) => {
-    browser.storage.local.get("schedules").then(({ schedules }: { schedules: Schedule[] }) => {
+    browser.storage.local.get("schedules").then(({ schedules }) => {
       browser.storage.local.set(
         {
-          schedules: schedules.filter((schedule: Schedule) => !ids.includes(schedule.id)),
+          schedules: schedules.filter(
+            (schedule: Schedule) => !ids.includes(schedule.id)
+          ),
         },
         () => resolve(true)
       );

@@ -1,14 +1,4 @@
 import { NeoMorphicDateTimePicker } from "../DatePicker";
-import type { Schedule } from '../../types';
-
-interface EditDateModalProps {
-  setEditingDateId: React.Dispatch<React.SetStateAction<string | null>>;
-  setEditingDate: React.Dispatch<React.SetStateAction<string | null>>;
-  editingDateId: string | null;
-  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
-  scheduledVideos: Schedule[];
-  editingDate: string | null;
-}
 
 const EditDateModal = ({
   setEditingDateId,

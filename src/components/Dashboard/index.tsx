@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { Schedule } from '../../types';
 import DashboardHeader from "./DashboardHeader";
 import DashboardWithData from "./DashboardWithData";
 import EditDateModal from "./EditDateModal";

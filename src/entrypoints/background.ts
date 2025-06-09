@@ -1,8 +1,9 @@
-import type { Schedule } from '../types';
 var currentScheduleInfo: Schedule | null = null;
 browser.alarms.onAlarm.addListener((alarm) => {
-  browser.storage.local.get("schedules").then(({ schedules }: { schedules: Schedule[] }) => {
-    const currentSchedule = schedules.find((s: Schedule) => s.name === alarm.name);
+  browser.storage.local.get("schedules").then(({ schedules }) => {
+    const currentSchedule = schedules.find(
+      (s: Schedule) => s.name === alarm.name
+    );
     if (!currentSchedule) return;
     currentScheduleInfo = currentSchedule;
     const diff = getDifferenceInMinutes(
@@ -12,7 +13,7 @@ browser.alarms.onAlarm.addListener((alarm) => {
     if (diff >= 1) {
       browser.storage.local
         .get("missedSchedules")
-        .then(({ missedSchedules }: { missedSchedules: Schedule[] }) => {
+        .then(({ missedSchedules }) => {
           browser.storage.local.set({
             missedSchedules: [...(missedSchedules || []), currentSchedule],
           });
@@ -79,7 +80,7 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
 browser.notifications.onClicked.addListener((notificationId) => {
   if (notificationId.startsWith("notification-id-")) {
     openNewTab({
-      name: currentScheduleInfo.name,
+      name: (currentScheduleInfo as Schedule).name,
       url: `https://www.youtube.com/watch?v=${notificationId.replace(
         "notification-id-",
         ""

@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
-interface NeoMorphicDateTimePickerProps {
-  selectedDate: Date | string | null | undefined;
-  onChange: (date: Date) => void;
-}
-
-export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: NeoMorphicDateTimePickerProps) => {
+export const NeoMorphicDateTimePicker = ({
+  selectedDate,
+  onChange,
+}: NeoMorphicDateTimePickerProps) => {
   const currentDateTime = new Date();
 
   const parseDate = (dateInput: Date | string | null | undefined): Date => {
@@ -37,11 +35,11 @@ export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: NeoMorphicD
     minute: false,
   });
 
-  const dateRef = useRef<HTMLDivElement>(null);
-  const monthRef = useRef<HTMLDivElement>(null);
-  const yearRef = useRef<HTMLDivElement>(null);
-  const hourRef = useRef<HTMLDivElement>(null);
-  const minuteRef = useRef<HTMLDivElement>(null);
+  const dateRef = useRef<HTMLDivElement>(null as any);
+  const monthRef = useRef<HTMLDivElement>(null as any);
+  const yearRef = useRef<HTMLDivElement>(null as any);
+  const hourRef = useRef<HTMLDivElement>(null as any);
+  const minuteRef = useRef<HTMLDivElement>(null as any);
 
   useEffect(() => {
     if (selectedDate) {
@@ -166,7 +164,7 @@ export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: NeoMorphicD
         onChange(newDateObj);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, month, year, hour, minute]); // onChange is excluded as per original logic, but consider adding if it can change
 
   const renderWheel = (
@@ -180,7 +178,7 @@ export const NeoMorphicDateTimePicker = ({ selectedDate, onChange }: NeoMorphicD
       const element = ref.current;
       if (!element) return;
 
-      const handleWheelEvent = (e: React.WheelEvent<HTMLDivElement>) => {
+      const handleWheelEvent = (e) => {
         e.stopPropagation();
         e.preventDefault();
         if (values.length === 0) return;

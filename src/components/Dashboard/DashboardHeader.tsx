@@ -1,12 +1,4 @@
 import { Trash2 } from "lucide-react";
-import type { Schedule } from '../../types';
-
-interface DashboardHeaderProps {
-  selectedItems: Set<string>;
-  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
-  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 const DashboardHeader = ({
   selectedItems,

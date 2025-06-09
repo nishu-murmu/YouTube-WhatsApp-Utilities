@@ -1,13 +1,11 @@
 import { NeoMorphicDateTimePicker } from "../DatePicker";
 
-interface DateEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedDate: Date | null;
-  onChange: (date: Date) => void;
-}
-
-export const DateEditModal = ({ isOpen, onClose, selectedDate, onChange }: DateEditModalProps) => {
+export const DateEditModal = ({
+  isOpen,
+  onClose,
+  selectedDate,
+  onChange,
+}: DateEditModalProps) => {
   if (!isOpen) return null;
 
   return (
