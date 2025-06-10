@@ -1,4 +1,4 @@
-let currentScheduleInfo: Schedule | null = null;
+var currentScheduleInfo: Schedule | null = null;
 browser.alarms.onAlarm.addListener((alarm) => {
   browser.storage.local.get("schedules").then(({ schedules }) => {
     const currentSchedule = schedules.find(
@@ -60,11 +60,11 @@ browser.runtime.onMessage.addListener((request, _, sendResponse) => {
       break;
 
     case "BULK_SCHEDULE_VIDEO":
-      const { schedules } = request.data;
+      const { schedules }: { schedules: Schedule[] } = request.data;
       const promises = schedules.map(({ name, time, url, id }) => {
         return createSchedule({
           name,
-          time: new Date(JSON.parse(time)),
+          time: new Date(JSON.parse(time as string)),
           id,
           url,
         });

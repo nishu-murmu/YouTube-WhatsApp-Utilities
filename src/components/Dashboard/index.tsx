@@ -10,12 +10,12 @@ import TableHeader from "./TableHeader";
 export const NeoMorphicDashboard = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [editingDateId, setEditingDateId] = useState<string | null>(null);
-  const [editingDate, setEditingDate] = useState<Date | null>(null);
+  const [editingDate, setEditingDate] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const pageSize = 5;
   const [scheduledVideos, setScheduledVideos] = useState<Schedule[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const filteredVideos = scheduledVideos.filter((video) =>
     video.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -43,7 +43,7 @@ export const NeoMorphicDashboard = () => {
     if (currentData.length === 0) {
       setSelectAll(false);
     } else {
-      const allCurrentSelected = currentData.every((item) =>
+      const allCurrentSelected = currentData.every((item: Schedule) =>
         selectedItems.has(item.id)
       );
       setSelectAll(allCurrentSelected && selectedItems.size > 0);

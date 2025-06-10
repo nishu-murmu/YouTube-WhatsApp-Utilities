@@ -35,7 +35,7 @@ export function sendRuntimeMessage<T = unknown>({
   data,
 }: {
   action: string;
-  data: T;
+  data: unknown;
 }) {
   return new Promise((resolve) => {
     browser.runtime.sendMessage(
@@ -51,7 +51,8 @@ export function sendRuntimeMessage<T = unknown>({
 export async function createSchedule({ name, time, url, id }: Schedule) {
   const when = (time as Date).getTime();
   await browser.alarms.create(name, { when });
-  let { schedules } = await browser.storage.local.get("schedules");
+  let { schedules }: { schedules: Schedule[] } =
+    await browser.storage.local.get("schedules");
   schedules ??= [];
   await browser.storage.local.set({
     schedules: [...schedules, { name, time: JSON.stringify(time), url, id }],
@@ -61,11 +62,10 @@ export async function createSchedule({ name, time, url, id }: Schedule) {
 
 export async function clearSchedule({ name }: { name?: string }) {
   browser.alarms.clear(name);
-  const { schedules } = await browser.storage.local.get("schedules");
+  const { schedules }: { schedules: Schedule[] } =
+    await browser.storage.local.get("schedules");
   browser.storage.local.set({
-    schedules: schedules.filter(
-      (s: { name: string; time: Date; id: string }) => s.name !== name
-    ),
+    schedules: schedules.filter((s: Schedule) => s.name !== name),
   });
   browser.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
@@ -153,12 +153,14 @@ export function getDifferenceInMinutes(now, schedule) {
   return Math.floor((now - schedule) / 1000 / 60);
 }
 
-export const removeScheduleVideo = (ids) => {
+export const removeScheduleVideo = (ids: string[]) => {
   return new Promise((resolve) => {
     browser.storage.local.get("schedules").then(({ schedules }) => {
       browser.storage.local.set(
         {
-          schedules: schedules.filter((schedule) => !ids.includes(schedule.id)),
+          schedules: schedules.filter(
+            (schedule: Schedule) => !ids.includes(schedule.id)
+          ),
         },
         () => resolve(true)
       );

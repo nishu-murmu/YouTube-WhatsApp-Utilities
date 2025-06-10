@@ -1,4 +1,4 @@
-import { format, formatDate } from "date-fns";
+import { format } from "date-fns";
 import { NeoMorphicCheckbox } from "./NeoMorphicCheckbox";
 import { Edit2 } from "lucide-react";
 
@@ -8,7 +8,7 @@ export const VideoRow = ({
   onSelect,
   onEditDate,
   isEditingDate,
-}) => {
+}: VideoRowProps) => {
   return (
     <div
       key={item.id}
@@ -63,9 +63,9 @@ export const VideoRow = ({
           }}
         >
           <div className="text-gray-700 flex-1 text-sm">
-            {format(JSON.parse(item.time), "PPP")}
+            {format(JSON.parse(item.time as string), "PPP")}
             <br />
-            {format(JSON.parse(item.time), "HH:mm:ss")}
+            {format(JSON.parse(item.time as string), "HH:mm:ss")}
           </div>
           <button
             onClick={onEditDate}

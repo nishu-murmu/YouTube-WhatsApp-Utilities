@@ -15,37 +15,52 @@ interface DashboardWithDataProps {
   selectedItems: Set<string>;
   currentData: Schedule[];
   editingDateId: string | null;
-  setEditingDateId: (id: string | null) => void;
-  setEditingDate: (date: Date | null) => void;
+  setEditingDateId: React.Dispatch<React.SetStateAction<string | null>>;
+  setEditingDate: React.Dispatch<React.SetStateAction<string | null>>;
   scheduledVideos: Schedule[];
-  setSelectedItems: (items: Set<string>) => void;
-  setSelectAll: (selectAll: boolean) => void;
-  setScheduledVideos: (videos: Schedule[]) => void;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
+  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
 }
 
 interface EditDateModalProps {
-  setEditingDateId: (id: string | null) => void;
-  setEditingDate: (date: Date | null) => void;
+  setEditingDateId: React.Dispatch<React.SetStateAction<string | null>>;
+  setEditingDate: React.Dispatch<React.SetStateAction<string | null>>;
   editingDateId: string | null;
-  setScheduledVideos: (videos: Schedule[]) => void;
+  setScheduledVideos: React.Dispatch<React.SetStateAction<Schedule[]>>;
   scheduledVideos: Schedule[];
-  editingDate: Date | null;
+  editingDate: string | Date | null;
 }
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  setCurrentPage: (page: number) => void;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface TableHeaderProps {
   selectAll: boolean;
-  currentData: { id: string }[];
-  setSelectAll: (selectAll: boolean) => void;
-  setSelectedItems: (items: Set<string>) => void;
+  currentData: Schedule[];
+  setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
 interface NeoMorphicDateTimePickerProps {
-  selectedDate: Date;
+  selectedDate: Date | string | null | undefined;
   onChange: (date: Date) => void;
+}
+
+interface DateEditModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedDate: Date | null;
+  onChange: (date: Date) => void;
+}
+
+interface VideoRowProps {
+  item: Schedule;
+  isSelected: boolean;
+  onSelect: () => void;
+  onEditDate: () => void;
+  isEditingDate: boolean;
 }
