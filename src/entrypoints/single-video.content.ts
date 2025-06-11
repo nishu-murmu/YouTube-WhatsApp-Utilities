@@ -23,6 +23,7 @@ export default defineContentScript({
 
     const observer = new MutationObserver(() => {
       const playbackSpeed = getSessionStorageItem("yt-player-playback-rate");
+      if (!playbackSpeed?.data || !actualDuration) return;
       durationElement!.textContent = timeToSeconds(
         actualDuration!,
         playbackSpeed?.data
