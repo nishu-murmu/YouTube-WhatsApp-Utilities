@@ -24,9 +24,7 @@ export async function createShadowRootUiWrapper({
       root.render(component);
       return root;
     },
-    onRemove: (root) => {
-      root?.unmount();
-    },
+    onRemove: (root) => root?.unmount(),
   });
 }
 
@@ -37,42 +35,38 @@ export function sendRuntimeMessage<T = unknown>({
   action: string;
   data: unknown;
 }) {
-  return new Promise((resolve) => {
-    browser.runtime.sendMessage(
-      {
-        action,
-        data,
-      },
-      (callbackData) => resolve(callbackData)
-    );
-  });
+  return new Promise((resolve) =>
+    browser.runtime.sendMessage({ action, data }, resolve)
+  );
 }
 
 export async function createSchedule({ name, time, url, id }: Schedule) {
-  const when = (time as Date).getTime();
-  await browser.alarms.create(name, { when });
+  await browser.alarms.create(name, { when: new Date(time).getTime() });
   let { schedules }: { schedules: Schedule[] } =
     await browser.storage.local.get("schedules");
-  schedules ??= [];
   await browser.storage.local.set({
-    schedules: [...schedules, { name, time: JSON.stringify(time), url, id }],
+    schedules: [
+      ...(schedules ?? []),
+      { name, time: JSON.stringify(time), url, id },
+    ],
   });
   return true;
 }
 
 export async function clearSchedule({ name }: { name?: string }) {
-  browser.alarms.clear(name);
+  if (name) await browser.alarms.clear(name);
   const { schedules }: { schedules: Schedule[] } =
     await browser.storage.local.get("schedules");
-  browser.storage.local.set({
+  await browser.storage.local.set({
     schedules: schedules.filter((s: Schedule) => s.name !== name),
   });
+
   browser.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
       if (tab.url?.includes("youtube.com")) {
         browser.tabs.sendMessage(tab.id!, {
           action: "REMOVE_SCHEDULE",
-          data: { name: name },
+          data: { name },
         });
       }
     });
@@ -81,40 +75,31 @@ export async function clearSchedule({ name }: { name?: string }) {
 
 export function openNewTab({ url, name }: { url: string; name: string }) {
   browser.tabs.create({ url, active: true });
-  clearSchedule({
-    name,
-  });
+  clearSchedule({ name });
 }
 
 export function timeToSeconds(timeStr: string, playback: number): string {
   const parts = timeStr.split(":").map(Number);
-  let totalSeconds = 0;
-  if (parts.length === 1) {
-    totalSeconds = parts[0];
-  } else if (parts.length === 2) {
-    totalSeconds = parts[0] * 60 + parts[1];
-  } else if (parts.length === 3) {
-    totalSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
-  }
-  const adjustedSeconds = totalSeconds / playback;
-  return secondsToTime(adjustedSeconds);
+  let totalSeconds = [0, 0, 0];
+  parts
+    .slice(0, 3)
+    .reverse()
+    .forEach((val, i) => (totalSeconds[i] = val));
+  const seconds =
+    totalSeconds[0] + totalSeconds[1] * 60 + totalSeconds[2] * 3600;
+  return secondsToTime(seconds / playback);
 }
 
 function secondsToTime(totalSeconds: number): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = Math.floor(totalSeconds % 60);
-  if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, "0")}:${String(
-      seconds
-    ).padStart(2, "0")}`;
-  } else {
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0"
-    )}`;
-  }
+  const secs = Math.floor(totalSeconds % 60);
+  return hours > 0
+    ? `${hours}:${pad(minutes)}:${pad(secs)}`
+    : `${pad(minutes)}:${pad(secs)}`;
 }
+
+const pad = (n: number): string => String(n).padStart(2, "0");
 
 export function getSessionStorageItem(key: string) {
   const value = sessionStorage.getItem(key);
@@ -126,36 +111,30 @@ export function getSessionStorageItem(key: string) {
 }
 
 export function toggleDashboard() {
-  browser.storage.local.get("dashboardVisible").then(({ dashboardVisible }) => {
+  browser.storage.local.get("dashboardVisible").then(({ dashboardVisible }) =>
     browser.storage.local
-      .set({
-        dashboardVisible:
-          !dashboardVisible || typeof dashboardVisible === "undefined"
-            ? true
-            : false,
-      })
-      .then(() => {
+      .set({ dashboardVisible: !dashboardVisible })
+      .then(() =>
         browser.tabs
           .query({ active: true, currentWindow: true })
-          .then((tabs) => {
-            const activeTab = tabs[0];
+          .then(([activeTab]) => {
             if (activeTab) {
               browser.tabs.sendMessage(activeTab.id!, {
                 action: "TOGGLE_DASHBOARD",
               });
             }
-          });
-      });
-  });
+          })
+      )
+  );
 }
 
 export function getDifferenceInMinutes(now: number, schedule: number) {
-  return Math.floor((now - schedule) / 1000 / 60);
+  return Math.floor((now - schedule) / 60000);
 }
 
-export const removeScheduleVideo = (ids: string[]) => {
-  return new Promise((resolve) => {
-    browser.storage.local.get("schedules").then(({ schedules }) => {
+export const removeScheduleVideo = (ids: string[]) =>
+  new Promise((resolve) =>
+    browser.storage.local.get("schedules").then(({ schedules }) =>
       browser.storage.local.set(
         {
           schedules: schedules.filter(
@@ -163,10 +142,9 @@ export const removeScheduleVideo = (ids: string[]) => {
           ),
         },
         () => resolve(true)
-      );
-    });
-  });
-};
+      )
+    )
+  );
 
 function isValidURL(str: string) {
   try {
@@ -178,75 +156,81 @@ function isValidURL(str: string) {
 }
 
 export function getYoutubeVideoId(url: string) {
-  if (!isValidURL(url)) return "";
-  return new URL(url).searchParams.get("v");
+  return isValidURL(url) ? new URL(url).searchParams.get("v") || "" : "";
 }
 
-export const addHoverIcons = () => {
-  const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
-  youtubeVideos.forEach((element, index) => {
+const injectHoverIcon = (
+  selector: string,
+  creator: () => HTMLElement,
+  handler: (element: Element, videoId: string, videoTitle: string) => void
+) => {
+  document.querySelectorAll(selector).forEach((element) => {
     if ((element as Element).getAttribute("element-injected") === "true")
       return;
-    const hoverContainer = createHoverIcon();
+
+    const hoverContainer = creator();
     element.prepend(hoverContainer);
     (element as Element).setAttribute("element-injected", "true");
-    const videoId = (element.querySelector("a") as HTMLAnchorElement)?.href
-      ? getYoutubeVideoId(
-          (element.querySelector("a") as HTMLAnchorElement)?.href || ""
-        )
-      : "";
 
+    const videoId = getYoutubeVideoId(
+      (element.querySelector("a") as HTMLAnchorElement)?.href || ""
+    );
     const videoTitle =
       (element.querySelector("h3") as HTMLElement)?.innerText || "";
-    const hoverIconClickHandler = () => {
-      self.postMessage(
-        {
-          type: "ADD_VIDEO",
-          data: {
-            videoId,
-            videoTitle,
-          },
-        },
-        "*"
-      );
-    };
 
-    (element.querySelector("#hover-icon") as HTMLElement)?.addEventListener(
-      "click",
-      hoverIconClickHandler
+    (
+      hoverContainer.querySelector("#hover-icon") as HTMLElement
+    )?.addEventListener("click", () =>
+      handler(element as Element, videoId, videoTitle)
     );
   });
 };
+
+export const addHoverIcons = () =>
+  injectHoverIcon(
+    "ytd-rich-item-renderer",
+    createHoverIcon,
+    (el, id, title) => {
+      self.postMessage(
+        { type: "ADD_VIDEO", data: { videoId: id, videoTitle: title } },
+        "*"
+      );
+    }
+  );
+
+export const addSingleVideoHoverIcons = () =>
+  injectHoverIcon(
+    "ytd-compact-video-renderer",
+    createSingleVideoHoverIcon,
+    (el, id, title) => {
+      self.postMessage(
+        { type: "ADD_VIDEO", data: { videoId: id, videoTitle: title } },
+        "*"
+      );
+    }
+  );
 
 export const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 export const createHoverIcon = () => {
-  const hoverContainer = document.createElement("div");
-  hoverContainer.className = "hover-icon-container neomorphic-icon";
-  hoverContainer.innerHTML = `
+  const div = document.createElement("div");
+  div.className = "hover-icon-container neomorphic-icon";
+  div.innerHTML = `
     <div class="neomorphic-icon-bg">
-      <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus">
+      <svg id="hover-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <path d="M8 12h8"/>
         <path d="M12 8v8"/>
       </svg>
-    </div>
-  `;
-  return hoverContainer;
+    </div>`;
+  return div;
 };
 
 export const createSingleVideoHoverIcon = () => {
-  const hoverContainer = document.createElement("div");
-  hoverContainer.className = "hover-icon-container-single neomorphic-icon";
-  hoverContainer.innerHTML = `
-    <div class="neomorphic-icon-bg">
-      <svg xmlns="http://www.w3.org/2000/svg" id="hover-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M8 12h8"/>
-        <path d="M12 8v8"/>
-      </svg>
-    </div>
-  `;
-  return hoverContainer;
+  const div = document.createElement("div");
+  div.className = "hover-icon-container-single neomorphic-icon";
+  div.innerHTML = createHoverIcon().innerHTML;
+  return div;
 };

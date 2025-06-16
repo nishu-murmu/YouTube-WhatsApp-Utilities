@@ -5,6 +5,8 @@ export const NeoMorphicDateTimePicker = ({
   onChange,
 }: NeoMorphicDateTimePickerProps) => {
   const currentDateTime = new Date();
+  const [error, setError] = useState<string | null>(null); // Added error state
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // Added timeout ref
 
   const parseDate = (dateInput: Date | string | null | undefined): Date => {
     if (!dateInput) return new Date();
@@ -40,6 +42,14 @@ export const NeoMorphicDateTimePicker = ({
   const yearRef = useRef<HTMLDivElement>(null as any);
   const hourRef = useRef<HTMLDivElement>(null as any);
   const minuteRef = useRef<HTMLDivElement>(null as any);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current); // Clear timeout on unmount
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedDate) {
@@ -111,6 +121,7 @@ export const NeoMorphicDateTimePicker = ({
 
   useEffect(() => {
     const newTime = new Date(year, month - 1, date, hour, minute);
+    let adjustedBecausePast = false;
     if (newTime.getTime() < currentDateTime.getTime()) {
       if (year < currentDateTime.getFullYear()) {
         setYear(currentDateTime.getFullYear());
@@ -146,9 +157,30 @@ export const NeoMorphicDateTimePicker = ({
         setMinute(currentDateTime.getMinutes());
       }
     }
+
+    // Check if date is in the past
+    if (newTime.getTime() < currentDateTime.getTime()) {
+      adjustedBecausePast = true;
+      // Set all parts to current date/time
+      setYear(currentDateTime.getFullYear());
+      setMonth(currentDateTime.getMonth() + 1);
+      setDate(currentDateTime.getDate());
+      setHour(currentDateTime.getHours());
+      setMinute(currentDateTime.getMinutes());
+    }
     const maxDays = getDaysInMonth(month, year);
     if (date > maxDays) {
       setDate(maxDays);
+    }
+    // Show error if we adjusted because of past date
+    if (adjustedBecausePast) {
+      setError(
+        "The selected time is in the past. Adjusted to the current time."
+      );
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => setError(null), 3000);
     }
   }, [year, month, date, hour, minute, onChange, selectedDate]); // Added onChange and selectedDate to dependency array
 
@@ -336,6 +368,13 @@ export const NeoMorphicDateTimePicker = ({
             .padStart(2, "0")}:${minute.toString().padStart(2, "0")}`}</span>
         </p>
       </div>
+
+      {/* Added error message display */}
+      {error && (
+        <div className="mt-3 p-3 bg-red-100 text-red-700 rounded-lg text-center">
+          {error}
+        </div>
+      )}
     </div>
   );
 };
