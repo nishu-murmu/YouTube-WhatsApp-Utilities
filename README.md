@@ -1,6 +1,9 @@
 <div align="center">
 
-![Extension Icon](public/icon/icon-48.png) 
+![Extension Icon](public/icon/icon-48.png)
+
+![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/last-updated/miponnamafdenpgjemkknimgjfibicdc)
+![Chrome Web Store Size](https://img.shields.io/chrome-web-store/size/miponnamafdenpgjemkknimgjfibicdc)
 
 # ⏰ YouTube Video Scheduler
 

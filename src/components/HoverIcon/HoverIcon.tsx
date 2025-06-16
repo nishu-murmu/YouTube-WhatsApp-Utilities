@@ -6,16 +6,10 @@ export const HoverElement: React.FC = () => {
     let goneOutside = false;
     const observer = new MutationObserver((list: MutationRecord[]) => {
       const youtubeVideos = document.querySelectorAll("ytd-rich-item-renderer");
-      if (
-        list[0]?.target &&
-        (list[0].target as HTMLElement).hasAttribute("href")
-      ) {
+      if (list[0]?.target && (list[0].target as HTMLAnchorElement)?.href) {
         youtubeVideos.forEach((element) => {
           const anchor = element.querySelector("a") as HTMLAnchorElement | null;
-          if (
-            anchor?.href ===
-            (list[0].target as HTMLAnchorElement).getAttribute("href")
-          ) {
+          if (anchor?.href === (list[0].target as HTMLAnchorElement).href) {
             goneOutside = true;
             const hoverIcon = element.querySelector(
               ".hover-icon-container"
@@ -34,6 +28,43 @@ export const HoverElement: React.FC = () => {
           }
         });
       }
+    });
+
+    const singleVideoPageObserver = new MutationObserver(() => {
+      const youtubeVideos = Array.from(
+        document.querySelectorAll("ytd-compact-video-renderer")
+      );
+      youtubeVideos.map((element) => {
+        if ((element as Element).getAttribute("element-injected") === "true")
+          return;
+        const hoverContainer = createSingleVideoHoverIcon();
+        element.prepend(hoverContainer);
+        (element as Element).setAttribute("element-injected", "true");
+        const videoId = (element.querySelector("a") as HTMLAnchorElement)?.href
+          ? getYoutubeVideoId(
+              (element.querySelector("a") as HTMLAnchorElement)?.href || ""
+            )
+          : "";
+
+        const videoTitle =
+          (element.querySelector("h3") as HTMLElement)?.innerText || "";
+        const hoverIconClickHandler = () => {
+          self.postMessage(
+            {
+              type: "ADD_VIDEO",
+              data: {
+                videoId,
+                videoTitle,
+              },
+            },
+            "*"
+          );
+        };
+        (element.querySelector("#hover-icon") as HTMLElement)?.addEventListener(
+          "click",
+          hoverIconClickHandler
+        );
+      });
     });
     setTimeout(() => {
       addHoverIcons();
@@ -65,6 +96,11 @@ export const HoverElement: React.FC = () => {
           childList: true,
         });
       }
+      singleVideoPageObserver.observe(contents!, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
     }, 5000);
     return () => {
       observer.disconnect();

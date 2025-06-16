@@ -12,6 +12,20 @@
   justify-content: center;
 }
 
+.hover-icon-container-single {
+  position: absolute;
+  top: 32%;
+  left: 20%;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+  z-index: 99;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .neomorphic-icon-bg {
   width: 36px;
   height: 36px;
