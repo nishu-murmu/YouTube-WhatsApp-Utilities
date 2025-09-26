@@ -239,7 +239,7 @@ export const NeoMorphicDateTimePicker = ({
     if (values.length === 0) {
       return (
         <div
-          className="relative h-32 overflow-hidden rounded-lg bg-gray-100 shadow-inner flex items-center justify-center"
+          className="relative h-32 overflow-hidden rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center"
           ref={ref}
         >
           <p className="text-gray-400 font-medium">No options</p>
@@ -256,7 +256,7 @@ export const NeoMorphicDateTimePicker = ({
 
     return (
       <div
-        className="relative h-32 overflow-hidden rounded-lg bg-gray-100 shadow-inner"
+        className="relative h-32 overflow-hidden rounded-lg bg-gray-100 border border-gray-200"
         ref={ref}
       >
         <div className="absolute top-1/2 left-0 right-0 h-10 -mt-5 pointer-events-none z-10">
@@ -311,7 +311,7 @@ export const NeoMorphicDateTimePicker = ({
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        <div className="md:col-span-3 bg-gray-50 p-5 rounded-xl shadow-lg">
+        <div className="md:col-span-3 bg-gray-50 p-5 rounded-xl border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
             Date
           </h3>
@@ -337,7 +337,7 @@ export const NeoMorphicDateTimePicker = ({
           </div>
         </div>
 
-        <div className="md:col-span-2 bg-gray-50 p-5 rounded-xl shadow-lg">
+        <div className="md:col-span-2 bg-gray-50 p-5 rounded-xl border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
             Time
           </h3>
@@ -358,7 +358,7 @@ export const NeoMorphicDateTimePicker = ({
         </div>
       </div>
 
-      <div className="mt-5 p-4 bg-gray-100 rounded-lg shadow-inner text-center">
+      <div className="mt-5 p-4 bg-gray-100 rounded-lg border border-gray-200 text-center">
         <p className="text-lg font-mono">
           Selected:{" "}
           <span className="text-blue-600 font-bold">{`${year}-${month

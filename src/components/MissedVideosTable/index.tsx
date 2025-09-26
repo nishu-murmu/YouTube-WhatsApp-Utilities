@@ -139,11 +139,7 @@ export default function NeoMorphicVideoTable() {
           />
 
           <div
-            className="overflow-hidden rounded-2xl bg-gray-200 p-2 max-h-[500px] overflow-y-auto"
-            style={{
-              boxShadow:
-                "inset 12px 12px 24px #c1c5c9, inset -12px -12px 24px #ffffff",
-            }}
+            className="overflow-hidden rounded-md bg-white border border-gray-300 p-2 max-h-[500px] overflow-y-auto"
           >
             <TableColumnHeaders
               selectAll={selectAll}

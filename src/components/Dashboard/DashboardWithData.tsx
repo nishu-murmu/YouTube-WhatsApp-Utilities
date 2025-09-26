@@ -45,14 +45,9 @@ const DashboardWithData = ({
       {currentData.map((item: Schedule) => (
         <div
           key={item.id}
-          className={`grid grid-cols-14 gap-4 p-6 bg-gray-200 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
-            selectedItems.has(item.id) ? "ring-2 ring-blue-300" : ""
+          className={`grid grid-cols-14 gap-4 p-4 bg-white border border-gray-300 rounded-md transition-colors duration-150 ${
+            selectedItems.has(item.id) ? "ring-2 ring-blue-300" : "hover:bg-gray-50"
           }`}
-          style={{
-            boxShadow: selectedItems.has(item.id)
-              ? "8px 8px 16px #bfdbfe, -8px -8px 16px #ffffff"
-              : "8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff",
-          }}
         >
           <div className="col-span-1 flex items-center justify-center">
             <label className="flex items-center cursor-pointer">
@@ -63,18 +58,15 @@ const DashboardWithData = ({
                 className="sr-only"
               />
               <div
-                className={`w-12 h-12 rounded-lg transition-all duration-200 flex items-center justify-center ${
-                  selectedItems.has(item.id) ? "bg-blue-200" : "bg-gray-200"
+                className={`w-12 h-12 rounded-md transition-colors duration-150 flex items-center justify-center border ${
+                  selectedItems.has(item.id)
+                    ? "bg-blue-500 border-blue-600 text-white"
+                    : "bg-white border-gray-300 text-gray-600"
                 }`}
-                style={{
-                  boxShadow: selectedItems.has(item.id)
-                    ? "inset 4px 4px 8px #bfdbfe, inset -4px -4px 8px #ffffff"
-                    : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
-                }}
               >
                 {selectedItems.has(item.id) && (
                   <svg
-                    className="w-3 h-3 text-blue-700"
+                    className="w-3 h-3"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -89,13 +81,7 @@ const DashboardWithData = ({
             </label>
           </div>
           <div className="col-span-5">
-            <div
-              className="aspect-[16/9] rounded-2xl overflow-hidden bg-gray-300"
-              style={{
-                boxShadow:
-                  "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
-              }}
-            >
+            <div className="aspect-[16/9] rounded-md overflow-hidden bg-gray-200 border border-gray-300">
               <iframe
                 className="w-full h-full"
                 src={`https://www.youtube.com/embed/${item.id}`}
@@ -106,24 +92,12 @@ const DashboardWithData = ({
             </div>
           </div>
           <div className="col-span-4 flex items-center">
-            <div
-              className="bg-gray-200 rounded-xl p-4 w-full"
-              style={{
-                boxShadow:
-                  "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff",
-              }}
-            >
+            <div className="bg-white border border-gray-300 rounded-md p-3 w-full">
               <span className="text-gray-800 font-medium">{item.name}</span>
             </div>
           </div>
           <div className="col-span-3 flex items-center">
-            <div
-              className="w-full flex items-center bg-gray-200 p-4 rounded-2xl transition-all duration-200"
-              style={{
-                boxShadow:
-                  "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
-              }}
-            >
+            <div className="w-full flex items-center bg-white border border-gray-300 p-3 rounded-md">
               <div className="text-gray-700 flex-1 text-sm">
                 {format(JSON.parse(item.time as string), "PPP")}
                 <br />
@@ -131,17 +105,11 @@ const DashboardWithData = ({
               </div>
               <button
                 onClick={() => toggleDatePicker(item.id)}
-                className={`ml-3 p-3 rounded-xl transition-all duration-200 ${
+                className={`ml-3 p-2 rounded-md transition-colors duration-150 ${
                   editingDateId === item.id
-                    ? "bg-blue-200 text-blue-700"
-                    : "bg-gray-200 text-gray-600 hover:scale-105"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                 }`}
-                style={{
-                  boxShadow:
-                    editingDateId === item.id
-                      ? "inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff"
-                      : "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-                }}
               >
                 <Edit2 size={16} />
               </button>
@@ -150,10 +118,7 @@ const DashboardWithData = ({
           <div className="col-span-1 flex items-center justify-center">
             <button
               onClick={() => handleDeleteSingle(item.id)}
-              className="p-3 rounded-xl bg-red-200 text-red-700 transition-all duration-200 hover:scale-105"
-              style={{
-                boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-              }}
+              className="p-2 rounded-md bg-red-500 text-white transition-colors duration-150 hover:bg-red-600"
               title="Delete this item"
             >
               <Trash2 size={16} />

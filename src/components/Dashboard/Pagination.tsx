@@ -10,26 +10,15 @@ const Pagination = ({
   };
   return (
     <div className="flex justify-center mt-8">
-      <div
-        className="bg-gray-200 p-3 rounded-2xl flex items-center space-x-2"
-        style={{
-          boxShadow: "12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff",
-        }}
-      >
+      <div className="bg-white border border-gray-300 p-2.5 rounded-2xl flex items-center space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+          className={`p-2 rounded-2xl cursor-pointer transition-colors duration-150 ${
             currentPage === 1
               ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-700"
+              : "text-gray-700 hover:bg-gray-50 border border-gray-300"
           }`}
-          style={{
-            boxShadow:
-              currentPage === 1
-                ? "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff"
-                : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
-          }}
         >
           &lt;
         </button>
@@ -38,17 +27,11 @@ const Pagination = ({
           <button
             key={i + 1}
             onClick={() => handlePageChange(i + 1)}
-            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 hover:scale-105 ${
+            className={`w-9 h-9 flex items-center justify-center rounded-2xl cursor-pointer transition-colors duration-150 border ${
               currentPage === i + 1
-                ? "bg-blue-200 text-blue-700 font-semibold"
-                : "text-gray-700"
+                ? "bg-blue-500 text-white border-blue-600"
+                : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50"
             }`}
-            style={{
-              boxShadow:
-                currentPage === i + 1
-                  ? "inset 6px 6px 12px #bfdbfe, inset -6px -6px 12px #ffffff"
-                  : "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-            }}
           >
             {i + 1}
           </button>
@@ -57,17 +40,11 @@ const Pagination = ({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+          className={`p-2 rounded-2xl cursor-pointer transition-colors duration-150 ${
             currentPage === totalPages
               ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-700"
+              : "text-gray-700 hover:bg-gray-50 border border-gray-300"
           }`}
-          style={{
-            boxShadow:
-              currentPage === totalPages
-                ? "inset 4px 4px 8px #c1c5c9, inset -4px -4px 8px #ffffff"
-                : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
-          }}
         >
           &gt;
         </button>

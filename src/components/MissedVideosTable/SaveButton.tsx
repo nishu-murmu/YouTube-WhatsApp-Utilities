@@ -6,16 +6,11 @@ export const SaveButton = ({ selectedCount, onSave, disabled }) => {
       <button
         onClick={onSave}
         disabled={disabled}
-        className={`px-8 py-4 rounded-2xl font-semibold transition-all duration-200 flex items-center space-x-3 ${
+        className={`px-8 py-3 rounded-md font-semibold transition-colors duration-150 flex items-center space-x-3 border ${
           disabled
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-gray-700 hover:scale-105"
+            ? "text-gray-400 bg-gray-100 cursor-not-allowed border-gray-200"
+            : "text-gray-700 bg-white hover:bg-gray-50 border-gray-300"
         }`}
-        style={{
-          boxShadow: disabled
-            ? "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff"
-            : "8px 8px 16px #c1c5c9, -8px -8px 16px #ffffff",
-        }}
       >
         <Save size={20} />
         <span>

@@ -1,10 +1,7 @@
 export const TableHeader = ({ selectedCount, removeMissedVideosTable }) => {
   return (
     <div
-      className="bg-gray-200 rounded-2xl p-6 mb-6 flex items-center justify-between"
-      style={{
-        boxShadow: "inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff",
-      }}
+      className="bg-white border border-gray-300 rounded-md p-4 mb-6 flex items-center justify-between"
     >
       <h1 className="text-2xl font-bold text-gray-800 text-center">
         Missed Videos - You missed this videos, Want to add this to schedule?
@@ -16,7 +13,7 @@ export const TableHeader = ({ selectedCount, removeMissedVideosTable }) => {
           </span>
         )}
         <button
-          className="p-3 rounded-xl text-gray-600 hover:text-gray-800 transition-all duration-200"
+          className="p-2 rounded-md text-gray-600 hover:text-gray-800 transition-colors duration-150"
           onClick={() => removeMissedVideosTable()}
         >
           ×

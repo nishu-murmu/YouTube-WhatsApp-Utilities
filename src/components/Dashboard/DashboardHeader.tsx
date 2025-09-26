@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 
 const DashboardHeader = ({
   selectedItems,
@@ -21,12 +21,7 @@ const DashboardHeader = ({
     setSelectAll(false);
   };
   return (
-    <div
-      className="bg-gray-200 rounded-2xl p-6 mb-6 flex items-center justify-between"
-      style={{
-        boxShadow: "inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff",
-      }}
-    >
+    <div className="bg-white border border-gray-300 rounded-2xl p-4 mb-6 flex items-center justify-between">
       <h1 className="text-2xl font-bold text-gray-800 text-center">
         Scheduled Videos
       </h1>
@@ -34,20 +29,17 @@ const DashboardHeader = ({
         {selectedItems.size > 0 && (
           <button
             onClick={handleDeleteSelected}
-            className="px-4 py-2 bg-red-200 text-red-700 rounded-xl transition-all duration-200 hover:scale-105 font-medium flex items-center space-x-2"
-            style={{
-              boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-            }}
+            className="px-4 py-2 bg-red-500 text-white rounded-md transition-colors duration-150 hover:bg-red-600 font-medium flex items-center space-x-2"
           >
             <Trash2 size={16} />
             <span>Delete Selected ({selectedItems.size})</span>
           </button>
         )}
         <button
-          className="p-3 rounded-xl text-gray-600 hover:text-gray-800 transition-all duration-200"
+          className="p-2 rounded-md text-gray-600 hover:text-gray-800 transition-colors duration-150"
           onClick={() => toggleDashboard()}
         >
-          ×
+          <X className="w-10 h-10" />
         </button>
       </div>
     </div>

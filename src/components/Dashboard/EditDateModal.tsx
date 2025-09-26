@@ -30,31 +30,16 @@ const EditDateModal = ({
       onClick={closeDatePicker}
     >
       <div
-        className="bg-gray-200 rounded-3xl p-8 max-w-4xl w-full mx-4"
-        style={{
-          boxShadow: "20px 20px 40px #9ca3af, -20px -20px 40px #ffffff",
-        }}
+        className="bg-white rounded-md p-6 max-w-4xl w-full mx-4 border border-gray-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="bg-gray-200 rounded-2xl p-4 mb-6"
-          style={{
-            boxShadow:
-              "inset 8px 8px 16px #c1c5c9, inset -8px -8px 16px #ffffff",
-          }}
-        >
+        <div className="bg-white rounded-md p-3 mb-6 border border-gray-300">
           <h3 className="text-lg font-semibold text-gray-800 text-center">
             Edit Schedule Date/Time
           </h3>
         </div>
 
-        <div
-          className="bg-gray-200 rounded-2xl p-4 mb-6"
-          style={{
-            boxShadow:
-              "inset 6px 6px 12px #c1c5c9, inset -6px -6px 12px #ffffff",
-          }}
-        >
+        <div className="bg-white rounded-md p-3 mb-6 border border-gray-300">
           <NeoMorphicDateTimePicker
             selectedDate={editingDate as Date}
             onChange={handleDateChange}
@@ -64,10 +49,7 @@ const EditDateModal = ({
         <div className="flex justify-end space-x-3">
           <button
             onClick={closeDatePicker}
-            className="px-6 py-3 bg-gray-200 rounded-xl transition-all duration-200 hover:scale-105 text-gray-700 font-medium"
-            style={{
-              boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-            }}
+            className="px-5 py-2 bg-white border border-gray-300 rounded-md transition-colors duration-150 hover:bg-gray-50 text-gray-700 font-medium"
           >
             Cancel
           </button>

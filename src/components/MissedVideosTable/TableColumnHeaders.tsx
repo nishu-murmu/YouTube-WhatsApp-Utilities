@@ -3,10 +3,7 @@ import { NeoMorphicCheckbox } from "./NeoMorphicCheckbox";
 export const TableColumnHeaders = ({ selectAll, onSelectAll }) => {
   return (
     <div
-      className="grid grid-cols-12 gap-4 p-4 font-semibold text-gray-700 mb-2 bg-gray-200 rounded-xl"
-      style={{
-        boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-      }}
+      className="grid grid-cols-12 gap-4 p-3 font-semibold text-gray-700 mb-2 bg-white border border-gray-300 rounded-md"
     >
       <div className="col-span-1 flex items-center justify-center">
         <NeoMorphicCheckbox checked={selectAll} onChange={onSelectAll} />

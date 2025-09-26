@@ -12,18 +12,15 @@ export const NeoMorphicCheckbox = ({
         className="sr-only"
       />
       <div
-        className={`${size} rounded-lg transition-all duration-200 flex items-center justify-center ${
-          checked ? "bg-blue-200" : "bg-gray-200"
+        className={`${size} rounded-md transition-colors duration-150 flex items-center justify-center border ${
+          checked
+            ? "bg-blue-500 border-blue-600 text-white"
+            : "bg-white border-gray-300 text-gray-600"
         }`}
-        style={{
-          boxShadow: checked
-            ? "inset 4px 4px 8px #bfdbfe, inset -4px -4px 8px #ffffff"
-            : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
-        }}
       >
         {checked && (
           <svg
-            className="w-3 h-3 text-blue-700"
+            className="w-3 h-3"
             fill="currentColor"
             viewBox="0 0 20 20"
           >

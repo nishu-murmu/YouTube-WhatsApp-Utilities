@@ -105,13 +105,7 @@ export const NeoMorphicDashboard = () => {
             totalResults={filteredVideos.length}
           />
 
-          <div
-            className="overflow-hidden rounded-2xl bg-gray-200 p-2 max-h-[450px] overflow-y-scroll"
-            style={{
-              boxShadow:
-                "inset 12px 12px 24px #c1c5c9, inset -12px -12px 24px #ffffff",
-            }}
-          >
+          <div className="overflow-hidden rounded-2xl bg-white border border-gray-300 p-2 max-h-[450px] overflow-y-scroll">
             <TableHeader
               currentData={currentData}
               selectAll={selectAll}

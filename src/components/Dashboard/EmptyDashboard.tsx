@@ -1,20 +1,9 @@
 const EmptyDashboard = () => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div
-        className="bg-gray-200 rounded-3xl p-12 border border-gray-300"
-        style={{
-          boxShadow:
-            "inset 16px 16px 32px #c1c5c9, inset -16px -16px 32px #ffffff",
-        }}
-      >
+      <div className="bg-white rounded-2xl p-10 border border-gray-300">
         <div className="text-center">
-          <div
-            className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center"
-            style={{
-              boxShadow: "12px 12px 24px #c1c5c9, -12px -12px 24px #ffffff",
-            }}
-          >
+          <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center border border-gray-300">
             <svg
               className="w-10 h-10 text-gray-500"
               fill="none"

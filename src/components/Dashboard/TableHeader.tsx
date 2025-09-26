@@ -14,36 +14,24 @@ const TableHeader = ({
     setSelectAll(!selectAll);
   };
   return (
-    <div
-      className="grid grid-cols-14 gap-4 p-4 font-semibold text-gray-700 mb-2 bg-gray-200 rounded-xl"
-      style={{
-        boxShadow: "6px 6px 12px #c1c5c9, -6px -6px 12px #ffffff",
-      }}
-    >
+    <div className="grid grid-cols-14 gap-4 p-3 font-semibold text-gray-700 mb-2 bg-white border border-gray-300 rounded-2xl items-center">
       <div className="col-span-1 flex items-center justify-center">
         <label className="flex items-center cursor-pointer">
           <input
             type="checkbox"
             checked={selectAll}
             onChange={handleSelectAll}
-            className="sr-only"
+            className="sr-only h-5 w-5"
           />
           <div
-            className={`w-12 h-12 rounded-lg transition-all duration-200 flex items-center justify-center ${
-              selectAll ? "bg-blue-200" : "bg-gray-200"
+            className={`w-10 h-10 rounded-md transition-colors duration-150 flex items-center justify-center border ${
+              selectAll
+                ? "bg-blue-500 border-blue-600 text-white"
+                : "bg-white border-gray-300 text-gray-600"
             }`}
-            style={{
-              boxShadow: selectAll
-                ? "inset 4px 4px 8px #bfdbfe, inset -4px -4px 8px #ffffff"
-                : "4px 4px 8px #c1c5c9, -4px -4px 8px #ffffff",
-            }}
           >
             {selectAll && (
-              <svg
-                className="w-3 h-3 text-blue-700"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
