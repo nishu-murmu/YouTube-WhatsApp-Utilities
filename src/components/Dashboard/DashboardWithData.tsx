@@ -45,8 +45,10 @@ const DashboardWithData = ({
       {currentData.map((item: Schedule) => (
         <div
           key={item.id}
-          className={`grid grid-cols-14 gap-4 p-4 bg-white border border-gray-300 rounded-md transition-colors duration-150 ${
-            selectedItems.has(item.id) ? "ring-2 ring-blue-300" : "hover:bg-gray-50"
+          className={`grid grid-cols-14 gap-4 p-4 bg-white border border-gray-300 rounded-2xl transition-colors duration-150 ${
+            selectedItems.has(item.id)
+              ? "ring-2 ring-blue-300"
+              : "hover:bg-gray-50"
           }`}
         >
           <div className="col-span-1 flex items-center justify-center">
@@ -58,7 +60,7 @@ const DashboardWithData = ({
                 className="sr-only"
               />
               <div
-                className={`w-12 h-12 rounded-md transition-colors duration-150 flex items-center justify-center border ${
+                className={`w-10 h-10 rounded-md transition-colors duration-150 flex items-center justify-center border ${
                   selectedItems.has(item.id)
                     ? "bg-blue-500 border-blue-600 text-white"
                     : "bg-white border-gray-300 text-gray-600"
@@ -66,7 +68,7 @@ const DashboardWithData = ({
               >
                 {selectedItems.has(item.id) && (
                   <svg
-                    className="w-3 h-3"
+                    className="w-8 h-8"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -81,7 +83,7 @@ const DashboardWithData = ({
             </label>
           </div>
           <div className="col-span-5">
-            <div className="aspect-[16/9] rounded-md overflow-hidden bg-gray-200 border border-gray-300">
+            <div className="aspect-[16/9] rounded-2xl overflow-hidden bg-gray-200 border border-gray-300">
               <iframe
                 className="w-full h-full"
                 src={`https://www.youtube.com/embed/${item.id}`}
@@ -92,12 +94,12 @@ const DashboardWithData = ({
             </div>
           </div>
           <div className="col-span-4 flex items-center">
-            <div className="bg-white border border-gray-300 rounded-md p-3 w-full">
+            <div className="bg-white border border-gray-300 rounded-2xl p-3 w-full">
               <span className="text-gray-800 font-medium">{item.name}</span>
             </div>
           </div>
           <div className="col-span-3 flex items-center">
-            <div className="w-full flex items-center bg-white border border-gray-300 p-3 rounded-md">
+            <div className="w-full flex items-center bg-white border border-gray-300 p-3 rounded-2xl">
               <div className="text-gray-700 flex-1 text-sm">
                 {format(JSON.parse(item.time as string), "PPP")}
                 <br />
@@ -105,7 +107,7 @@ const DashboardWithData = ({
               </div>
               <button
                 onClick={() => toggleDatePicker(item.id)}
-                className={`ml-3 p-2 rounded-md transition-colors duration-150 ${
+                className={`ml-3 p-2 rounded-md cursor-pointer transition-colors duration-150 ${
                   editingDateId === item.id
                     ? "bg-blue-500 text-white"
                     : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
@@ -118,7 +120,7 @@ const DashboardWithData = ({
           <div className="col-span-1 flex items-center justify-center">
             <button
               onClick={() => handleDeleteSingle(item.id)}
-              className="p-2 rounded-md bg-red-500 text-white transition-colors duration-150 hover:bg-red-600"
+              className="p-2 rounded-md bg-red-500 cursor-pointer text-white transition-colors duration-150 hover:bg-red-600"
               title="Delete this item"
             >
               <Trash2 size={16} />
