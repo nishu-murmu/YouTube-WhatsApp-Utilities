@@ -22,14 +22,5 @@ export default defineConfig({
       96: "/icon/icon-96.png",
       128: "/icon/icon-128.png",
     },
-    commands: {
-      "toggle-dashboard": {
-        suggested_key: {
-          default: "Ctrl+Shift+S",
-          mac: "Command+Shift+S",
-        },
-        description: "Toggle the schedule dashboard",
-      },
-    },
   },
 });

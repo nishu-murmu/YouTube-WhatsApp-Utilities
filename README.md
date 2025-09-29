@@ -5,38 +5,58 @@
 ![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/last-updated/miponnamafdenpgjemkknimgjfibicdc)
 ![Chrome Web Store Size](https://img.shields.io/chrome-web-store/size/miponnamafdenpgjemkknimgjfibicdc)
 
-# ⏰ YouTube Video Scheduler
+# YouTube & WhatsApp Utilities
 
 </div>
 
+## Overview
 
-## 📅 Overview
-This Browser extension allows you to schedule YouTube videos for later viewing. You can easily add, update, or remove scheduled videos directly from your browser. Additionally, the extension provides a real-time update of the video duration when you change the playback speed, helping you better manage your viewing time.
+This browser extension helps you manage YouTube viewing and WhatsApp Web productivity:
 
-## ✨ Features
-- **Schedule YouTube Videos:** Add any YouTube video to your schedule for later viewing.
-- **Update or Remove Schedules:** Easily update the scheduled time or remove videos from your schedule.
-- **User-Friendly Dashboard:** Manage all your scheduled videos in a clean and intuitive dashboard.
-- **Real-Time Duration Update:** Instantly see the updated duration of a YouTube video when you change its playback speed (bonus feature).
+- Schedule YouTube videos for later and get notified at the right time.
+- See a table of any missed schedules and quickly reschedule or remove them.
+- Instantly view adjusted video duration when changing playback speed.
+- On WhatsApp Web, quickly toggle the sidebar to focus on chats.
 
-## ⚙️ How to Use
-1. Download the extension from chrome web store or firefox add ons store.
-2. Hover on any of the video, (you'll see the hover icon), click on it to set the schedule time.
-3. Press Ctrl+Shif+S to toggle the schedule dashboard for editing or deleting the schedule.
+## Features
 
-## 🌱 Getting Started
+- **Schedule YouTube videos**: Add any video to your schedule for later viewing.
+- **Dashboard management**: Update or remove schedules in a clean, intuitive dashboard.
+- **Missed schedules table**: Automatically surfaces schedules you didn’t open in time.
+- **Notifications**: Receive a clickable reminder when a scheduled video is due.
+- **Real-time duration**: Shows actual vs. playback-speed-adjusted duration on the watch page.
+- **WhatsApp Web utility**: Toggle the left sidebar to focus on conversations.
+
+## How to Use
+
+1. Download the extension from the Chrome Web Store or Firefox Add-ons store.
+2. On YouTube, hover over any video tile to reveal the plus hover icon, then click to schedule.
+3. Press Ctrl+Shift+S to toggle the schedule dashboard and manage your videos.
+4. Missed schedules (if any) will appear automatically in a separate table for quick cleanup.
+5. On WhatsApp Web, press Ctrl+B to toggle the sidebar visibility.
+
+### Keyboard Shortcuts
+
+- Ctrl+Shift+S: Toggle the YouTube schedule dashboard
+- Ctrl+B: Toggle the WhatsApp Web sidebar
+
+## Getting Started
+
 1. Clone this repository.
 2. Follow [WXT Docs](https://wxt.dev/guide/installation.html) to run this project.
 
-## 🤝 Contribution
+## Contribution
+
 Contributions are welcome! To contribute:
+
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix.
-4. Submit a pull request with a clear description of your changes.
+3. Submit a pull request with a clear description of your changes.
 
 For major changes, please open an issue first to discuss what you would like to change.
 
 ## 📜 License
+
 This project is licensed under the MIT License.
 
 ##### Made with [WXT](https://wxt.dev/) framework.

@@ -91,8 +91,12 @@ browser.notifications.onClicked.addListener((notificationId) => {
 
 export default defineBackground(() => {
   browser.commands.onCommand.addListener((command) => {
-    if (command === "toggle-dashboard") {
-      toggleDashboard();
+    switch (command) {
+      case "toggle-dashboard":
+        toggleDashboard();
+        break;
+      default:
+        break;
     }
   });
 });

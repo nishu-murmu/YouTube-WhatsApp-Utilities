@@ -234,3 +234,10 @@ export const createSingleVideoHoverIcon = () => {
   div.innerHTML = createHoverIcon().innerHTML;
   return div;
 };
+
+export const getList = (element: HTMLElement) => {
+  if (Array.from(element.childNodes).length >= 4) {
+    return Array.from(element.childNodes);
+  }
+  return getList(element.querySelector("div")!);
+};
