@@ -1,11 +1,9 @@
 import { getSessionStorageItem } from "@/utils";
-import { initExtensionFonts } from "@/utils";
 
 export default defineContentScript({
   matches: ["https://www.youtube.com/watch?*"],
   cssInjectionMode: "ui",
   async main() {
-    initExtensionFonts();
     const settingsButton = document.querySelector(
       `[class="ytp-popup ytp-settings-menu"]`
     );

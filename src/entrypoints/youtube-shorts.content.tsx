@@ -1,12 +1,10 @@
 import "~/assets/tailwind.css";
 import ShortsLimitWarning from "@/components/ShortsLimitWarning";
-import { initExtensionFonts } from "@/utils";
 
 export default defineContentScript({
   matches: ["https://www.youtube.com/shorts/*"],
   cssInjectionMode: "ui",
   async main(ctx) {
-    initExtensionFonts();
     let warningUi: Awaited<
       ReturnType<typeof createShadowRootUiWrapper>
     > | null = null;
