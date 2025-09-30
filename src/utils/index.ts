@@ -213,6 +213,20 @@ export const addSingleVideoHoverIcons = () =>
 export const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
+export function initExtensionFonts() {
+  try {
+    const fontUrl = browser.runtime.getURL("/fonts/HackNerdFont.ttf");
+    const styleId = "__ext_font_injector__";
+    if (document.getElementById(styleId)) return;
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = `@font-face { font-family: "HackNerdFont"; src: url("${fontUrl}") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }`;
+    document.head.appendChild(style);
+  } catch (e) {
+    // no-op; font is optional
+  }
+}
+
 export const createHoverIcon = () => {
   const div = document.createElement("div");
   div.className = "hover-icon-container neomorphic-icon";

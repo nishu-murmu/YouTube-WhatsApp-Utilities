@@ -4,12 +4,14 @@ import { HoverElement } from "@/components/HoverIcon/HoverIcon";
 import { NeoMorphicDashboard } from "@/components/Dashboard";
 import { AddVideo } from "@/components/AddVideo";
 import NeoMorphicVideoTable from "@/components/MissedVideosTable";
+import { initExtensionFonts } from "@/utils";
 
 export default defineContentScript({
   matches: ["https://www.youtube.com/*"],
   cssInjectionMode: "ui",
 
   async main(ctx) {
+    initExtensionFonts();
     const ui = await createShadowRootUiWrapper({
       ctx,
       name: "hover-element",

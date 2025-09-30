@@ -1,11 +1,20 @@
 import { NeoMorphicDateTimePicker } from "../DatePicker";
 
+export type CommonDateEditModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedDate: Date | null;
+  onChange: (date: Date) => void;
+  title?: string;
+};
+
 export const DateEditModal = ({
   isOpen,
   onClose,
   selectedDate,
   onChange,
-}: DateEditModalProps) => {
+  title = "Edit Date/Time",
+}: CommonDateEditModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -19,13 +28,13 @@ export const DateEditModal = ({
       >
         <div className="bg-white rounded-md p-3 mb-6 border border-gray-300">
           <h3 className="text-lg font-semibold text-gray-800 text-center">
-            Edit Video Time
+            {title}
           </h3>
         </div>
 
         <div className="bg-white rounded-md p-3 mb-6 border border-gray-300">
           <NeoMorphicDateTimePicker
-            selectedDate={selectedDate}
+            selectedDate={selectedDate as Date}
             onChange={onChange}
           />
         </div>
@@ -42,3 +51,5 @@ export const DateEditModal = ({
     </div>
   );
 };
+
+export default DateEditModal;

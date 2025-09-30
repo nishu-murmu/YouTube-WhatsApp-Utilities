@@ -15,6 +15,7 @@ export default defineConfig({
   manifest: {
     permissions: ["activeTab", "tabs", "storage", "alarms", "notifications"],
     host_permissions: ["https://www.youtube.com/*"],
+    action: {},
     icons: {
       16: "/icon/icon-16.png",
       32: "/icon/icon-32.png",

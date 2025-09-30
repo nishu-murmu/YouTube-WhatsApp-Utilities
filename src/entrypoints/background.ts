@@ -1,4 +1,24 @@
 var currentScheduleInfo: Schedule | null = null;
+const tabsShortsMap = new Map();
+let shortsLimit = 10;
+
+// Initialize dynamic shorts limit from storage
+browser.storage.local.get("shortsLimit").then(({ shortsLimit: stored }) => {
+  if (typeof stored === "number" && stored > 0) {
+    shortsLimit = stored;
+  }
+});
+
+// React to runtime updates to the shorts limit
+browser.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === "local" && changes.shortsLimit) {
+    const next = changes.shortsLimit.newValue;
+    if (typeof next === "number" && next > 0) {
+      shortsLimit = next;
+    }
+  }
+});
+
 browser.alarms.onAlarm.addListener((alarm) => {
   browser.storage.local.get("schedules").then(({ schedules }) => {
     const currentSchedule = schedules.find(
@@ -99,4 +119,60 @@ export default defineBackground(() => {
         break;
     }
   });
+});
+
+function addShortToTabId(shortId: string, tabId: number) {
+  if (!shortId) {
+    console.log("There is no shorts url");
+    return;
+  }
+  if (tabsShortsMap.has(tabId)) {
+    const existingArr = tabsShortsMap.get(tabId) as Array<string>;
+    if (existingArr.includes(shortId)) return;
+    const updatedArr = [...existingArr, shortId];
+    if (updatedArr.length === shortsLimit) {
+      browser.tabs.update({ muted: true });
+      browser.tabs.sendMessage(tabId, {
+        action: "LIMIT_EXCEEDED",
+      });
+      return;
+    }
+    tabsShortsMap.set(tabId, updatedArr);
+  }
+}
+
+function deleteTabId(tabId: number) {
+  if (tabsShortsMap.has(tabId)) {
+    tabsShortsMap.delete(tabId);
+  }
+}
+
+function addTabId(tabId: number) {
+  if (!tabsShortsMap.has(tabId)) {
+    tabsShortsMap.set(tabId, []);
+  }
+}
+
+function retrieveShortId(youtubeUrl: string) {
+  const pathname = new URL(youtubeUrl).pathname;
+  if (!pathname.includes("shorts")) {
+    return "";
+  }
+  return pathname.split("/").at(-1);
+}
+
+browser.tabs.onUpdated.addListener((tabId, tabInfo, tab) => {
+  if (tabInfo.url) {
+    if (!tabsShortsMap.has(tabId)) {
+      addTabId(tabId);
+    } else {
+      addShortToTabId(retrieveShortId(tabInfo.url)!, tabId);
+    }
+  }
+});
+
+browser.tabs.onRemoved.addListener((tabId) => {
+  if (tabsShortsMap.has(tabId)) {
+    deleteTabId(tabId);
+  }
 });

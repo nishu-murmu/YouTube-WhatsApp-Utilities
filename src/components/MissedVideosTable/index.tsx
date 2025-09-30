@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { TableHeader } from "./TableHeader";
-import { DateEditModal } from "./DateEditModal";
+import { DateEditModal } from "../common/DateEditModal";
 import { SaveButton } from "./SaveButton";
-import { Pagination } from "./Pagination";
+import { Pagination } from "../common/Pagination";
 import { VideoRow } from "./VideoRaw";
 import { EmptyTable } from "./EmptyTable";
 import { TableColumnHeaders } from "./TableColumnHeaders";
@@ -138,9 +138,7 @@ export default function NeoMorphicVideoTable() {
             removeMissedVideosTable={removeMissedVideosTable}
           />
 
-          <div
-            className="overflow-hidden rounded-md bg-white border border-gray-300 p-2 max-h-[500px] overflow-y-auto"
-          >
+          <div className="overflow-hidden rounded-md bg-white border border-gray-300 p-2 max-h-[500px] overflow-y-auto">
             <TableColumnHeaders
               selectAll={selectAll}
               onSelectAll={handleSelectAll}
@@ -168,6 +166,9 @@ export default function NeoMorphicVideoTable() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            rounded="md"
+            padding="p-2"
+            spacing="space-x-2"
           />
 
           <SaveButton

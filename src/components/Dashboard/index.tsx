@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import DashboardHeader from "./DashboardHeader";
 import DashboardWithData from "./DashboardWithData";
-import EditDateModal from "./EditDateModal";
 import EmptyDashboard from "./EmptyDashboard";
-import Pagination from "./Pagination";
 import { SearchBar } from "./SearchBar";
 import TableHeader from "./TableHeader";
+import { Pagination } from "../common/Pagination";
+import { DateEditModal } from "../common/DateEditModal";
 
 export const NeoMorphicDashboard = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -132,19 +132,32 @@ export const NeoMorphicDashboard = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
+            onPageChange={setCurrentPage}
+            rounded="2xl"
+            padding="p-2.5"
+            spacing="space-x-4"
           />
         </div>
-        {editingDateId && (
-          <EditDateModal
-            editingDate={editingDate}
-            editingDateId={editingDateId}
-            scheduledVideos={scheduledVideos}
-            setEditingDate={setEditingDate}
-            setEditingDateId={setEditingDateId}
-            setScheduledVideos={setScheduledVideos}
-          />
-        )}
+        <DateEditModal
+          isOpen={!!editingDateId}
+          onClose={() => {
+            setEditingDateId(null);
+            setEditingDate(null);
+          }}
+          selectedDate={editingDate ? (JSON.parse(editingDate) as Date) : null}
+          onChange={(date: Date) => {
+            if (editingDateId) {
+              setScheduledVideos(
+                scheduledVideos.map((video: Schedule) =>
+                  video.id === editingDateId
+                    ? { ...video, time: JSON.stringify(date) }
+                    : video
+                )
+              );
+            }
+          }}
+          title="Edit Schedule Date/Time"
+        />
       </div>
     </div>
   );

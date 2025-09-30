@@ -5,7 +5,7 @@
 ![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/last-updated/miponnamafdenpgjemkknimgjfibicdc)
 ![Chrome Web Store Size](https://img.shields.io/chrome-web-store/size/miponnamafdenpgjemkknimgjfibicdc)
 
-# YouTube & WhatsApp Utilities
+# YouTube/WhatsApp Utilities
 
 </div>
 
@@ -25,6 +25,7 @@ This browser extension helps you manage YouTube viewing and WhatsApp Web product
 - **Missed schedules table**: Automatically surfaces schedules you didn’t open in time.
 - **Notifications**: Receive a clickable reminder when a scheduled video is due.
 - **Real-time duration**: Shows actual vs. playback-speed-adjusted duration on the watch page.
+- **Youtube Shorts Controller**: Gives you warning, on your shorts consumption, customizable from popup.
 - **WhatsApp Web utility**: Toggle the left sidebar to focus on conversations.
 
 ## How to Use
