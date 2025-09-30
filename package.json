@@ -1,6 +1,6 @@
 {
   "name": "Youtube/WhatsApp Utilities",
-  "description": "A browser extension to schedule videos on youtube, get the actual playback speed, has youtube shorts scroll controller and toggle whatsapp sidebar",
+  "description": "A browser extension to schedule youtube videos, get playback speed of videos, youtube-shorts controller and toggle whatsapp sidebar.",
   "private": true,
   "version": "0.2.1",
   "type": "module",
