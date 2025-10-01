@@ -1,1 +1,0 @@
-pnpm postinstall && pnpm compile && pnpm build

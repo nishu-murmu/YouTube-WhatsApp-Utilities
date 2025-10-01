@@ -6,6 +6,7 @@ export function ShortsLimitSettings({ onClose }: { onClose?: () => void }) {
 
   const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
   const [warningText, setWarningText] = useState<string>(DEFAULT_WARNING);
+  const [savedMessage, setSavedMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -27,17 +28,27 @@ export function ShortsLimitSettings({ onClose }: { onClose?: () => void }) {
     };
   }, []);
 
-  function handleSave() {
+  async function handleSave() {
+    setSavedMessage("Saving...");
     const sanitizedLimit =
       Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : DEFAULT_LIMIT;
     const sanitizedWarning =
       typeof warningText === "string" && warningText.trim()
         ? warningText.trim()
         : DEFAULT_WARNING;
+    await sleep(500);
     browser.storage.local
       .set({ shortsLimit: sanitizedLimit, shortsWarningText: sanitizedWarning })
-      .then(() => {
+      .then(async () => {
+        setSavedMessage("Contents Saved!");
+        await sleep(2000);
+        setSavedMessage("");
         if (onClose) onClose();
+      })
+      .catch(async () => {
+        setSavedMessage("Failed to save");
+        await sleep(2000);
+        setSavedMessage("");
       });
   }
 
@@ -81,18 +92,19 @@ export function ShortsLimitSettings({ onClose }: { onClose?: () => void }) {
           <p className="mt-2 text-xs text-gray-500">
             This message will be shown when the Shorts limit is reached.
           </p>
+          <p className="mt-2 text-xs text-green-500 italic">{savedMessage}</p>
         </div>
         <div className="flex items-center justify-end gap-2">
           <button
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="rounded-lg cursor-pointer px-4 py-2 text-gray-700 hover:bg-gray-100"
             disabled={loading}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+            className="rounded-lg cursor-pointer bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
             disabled={loading}
           >
             Save

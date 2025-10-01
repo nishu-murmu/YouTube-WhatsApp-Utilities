@@ -2,14 +2,14 @@ import "~/assets/tailwind.css";
 import ShortsLimitWarning from "@/components/ShortsLimitWarning";
 
 export default defineContentScript({
-  matches: ["https://www.youtube.com/shorts/*"],
+  matches: ["https://www.youtube.com/*"],
   cssInjectionMode: "ui",
   async main(ctx) {
     let warningUi: Awaited<
       ReturnType<typeof createShadowRootUiWrapper>
     > | null = null;
 
-    async function ensureWarningUi() {
+    async function showWarningUi() {
       if (!warningUi) {
         warningUi = await createShadowRootUiWrapper({
           ctx,
@@ -19,19 +19,32 @@ export default defineContentScript({
           component: <ShortsLimitWarning />,
         });
       }
-      return warningUi;
+      warningUi.mount();
+    }
+
+    function hideWarningUi() {
+      if (warningUi) {
+        warningUi.remove();
+        warningUi = null;
+      }
     }
 
     browser.runtime.onMessage.addListener((message) => {
-      console.log(message, "check response");
-      if (message.action === "LIMIT_EXCEEDED") {
-        ensureWarningUi().then((ui) => ui.mount());
+      console.log(message, "message");
+      switch (message.action) {
+        case "LIMIT_EXCEEDED":
+          showWarningUi();
+          break;
+        case "NO_SHORTS_URL":
+          hideWarningUi();
+          break;
+        default:
+          break;
       }
     });
 
     self.addEventListener("pagehide", () => {
-      warningUi?.remove();
-      warningUi = null;
+      hideWarningUi();
     });
   },
 });
