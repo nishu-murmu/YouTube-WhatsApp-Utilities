@@ -10,14 +10,6 @@ export default defineWxtModule({
         run_at: "document_idle",
       });
       const commands = {
-        "toggle-whatsapp-sidebar": {
-          suggested_key: {
-            default: "Alt+Q",
-            mac: "Alt+Q",
-          },
-          description: "Toggle the whatsapp left sidebar",
-          global: true,
-        },
         "toggle-dashboard": {
           suggested_key: {
             default: "Ctrl+I",
